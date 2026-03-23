@@ -1,0 +1,804 @@
+{
+        "driver": "QSQLITE",
+        "name": "Optimisation_prix_production",
+        "tables": [
+                {
+                        "Etape": [
+                                {
+                                        "Auto": false,
+                                        "PK": true,
+                                        "FieldName": "ID_etape",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Nom_etape",
+                                        "FieldType": "TEXT",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": true,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Numero_excution",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": true,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Dure",
+                                        "FieldType": "DATETIME",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": true,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "ID_produit",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "Produit",
+                                        "FKField": "ID_produit"
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "ID_machine",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "Machine",
+                                        "FKField": "ID_machine"
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                }
+                        ]
+                },
+                {
+                        "Machine": [
+                                {
+                                        "Auto": false,
+                                        "PK": true,
+                                        "FieldName": "ID_machine",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Nom_machine",
+                                        "FieldType": "TEXT",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": true,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Duree",
+                                        "FieldType": "DATETIME",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Puissance_elec",
+                                        "FieldType": "REAL",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": true,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "ID_operateur",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "Operateur",
+                                        "FKField": "ID_operateur"
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                }
+                        ]
+                },
+                {
+                        "Operateur": [
+                                {
+                                        "Auto": false,
+                                        "PK": true,
+                                        "FieldName": "ID_operateur",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Nom_operateur",
+                                        "FieldType": "TEXT",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": true,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Prenom_operateur",
+                                        "FieldType": "TEXT",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": true,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Email",
+                                        "FieldType": "TEXT",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": true,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                }
+                        ]
+                },
+                {
+                        "Commande": [
+                                {
+                                        "Auto": false,
+                                        "PK": true,
+                                        "FieldName": "ID_commande",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                }
+                        ]
+                },
+                {
+                        "LienProduitCommande": [
+                                {
+                                        "Auto": false,
+                                        "PK": true,
+                                        "FieldName": "ID_produit",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "Produit",
+                                        "FKField": "ID_produit"
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": true,
+                                        "FieldName": "ID_commande",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "Commande",
+                                        "FKField": "ID_commande"
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Date_depart",
+                                        "FieldType": "DATETIME",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": true,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Prix_produit",
+                                        "FieldType": "REAL",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Quantite",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": true,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                }
+                        ]
+                },
+                {
+                        "Prix": [
+                                {
+                                        "Auto": false,
+                                        "PK": true,
+                                        "FieldName": "Debut_date",
+                                        "FieldType": "DATETIME",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Prix_kwh",
+                                        "FieldType": "REAL",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": true,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                }
+                        ]
+                },
+                {
+                        "Produit": [
+                                {
+                                        "Auto": false,
+                                        "PK": true,
+                                        "FieldName": "ID_produit",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Nom_produit",
+                                        "FieldType": "TEXT",
+                                        "FieldLength": "",
+                                        "Unique": true,
+                                        "NotNull": true,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "Description_produit",
+                                        "FieldType": "TEXT",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                },
+                                {
+                                        "Auto": false,
+                                        "PK": false,
+                                        "FieldName": "",
+                                        "FieldType": "INTEGER",
+                                        "FieldLength": "",
+                                        "Unique": false,
+                                        "NotNull": false,
+                                        "FKTable": "",
+                                        "FKField": ""
+                                }
+                        ]
+                }
+        ]
+}

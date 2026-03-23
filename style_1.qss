@@ -1,0 +1,143 @@
+/* ------------------------------
+   THEME INDUSTRIEL ULTRA-COLORE
+   Style vibrant, usine, contrasté
+--------------------------------*/
+
+/* Fond général */
+QWidget {
+    background-color: #F2F4F7;
+    font-family: "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    color: #2E2E2E;
+}
+
+/* Titre principal */
+QLabel#titleLabel {
+    color: #007BFF;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+/* GroupBox style industriel */
+QGroupBox {
+    border: 3px solid #2E2E2E;
+    border-radius: 10px;
+    margin-top: 15px;
+    padding: 12px;
+    background-color: #FFFFFF;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 12px;
+    padding: 0 6px;
+    background-color: #FF6F00;
+    color: white;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+/* Labels */
+QLabel {
+    font-weight: 600;
+    color: #2E2E2E;
+}
+
+/* Champs texte */
+QLineEdit, QTextEdit, QSpinBox, QComboBox {
+    background-color: #FFFFFF;
+    border: 2px solid #007BFF;
+    border-radius: 6px;
+    padding: 4px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QSpinBox:focus, QComboBox:focus {
+    border: 2px solid #FF6F00;
+    background-color: #FFF3E0;
+}
+
+/* Boutons généraux */
+QPushButton {
+    background-color: #007BFF;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: bold;
+    border: 2px solid #2E2E2E;
+}
+
+QPushButton:hover {
+    background-color: #005FCC;
+}
+
+QPushButton:pressed {
+    background-color: #003F88;
+}
+
+/* Bouton Ajouter une étape (accent vert néon) */
+QPushButton#btnAddStep {
+    background-color: #00C853;
+    color: white;
+    border: 2px solid #2E2E2E;
+}
+
+QPushButton#btnAddStep:hover {
+    background-color: #00A844;
+}
+
+/* Bouton Annuler (rouge industriel) */
+QPushButton#btnCancel {
+    background-color: #D50000;
+    color: white;
+}
+
+QPushButton#btnCancel:hover {
+    background-color: #A00000;
+}
+
+/* Tableau industriel */
+QTableWidget {
+    background-color: #FFFFFF;
+    border: 3px solid #2E2E2E;
+    border-radius: 8px;
+    gridline-color: #2E2E2E;
+}
+
+QHeaderView::section {
+    background-color: #FF6F00;
+    color: white;
+    padding: 6px;
+    border: 1px solid #2E2E2E;
+    font-weight: bold;
+}
+
+QTableWidget::item {
+    padding: 6px;
+}
+
+/* Scrollbars style machine */
+QScrollBar:vertical {
+    background: #CCCCCC;
+    width: 12px;
+    border: 2px solid #2E2E2E;
+}
+
+QScrollBar::handle:vertical {
+    background: #007BFF;
+    min-height: 20px;
+    border-radius: 4px;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+/* Status bar */
+QStatusBar {
+    background-color: #E0E0E0;
+    border-top: 2px solid #2E2E2E;
+}

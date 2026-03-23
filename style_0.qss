@@ -1,0 +1,140 @@
+/* ------------------------------
+   PALETTE INDUSTRIELLE
+   Bleu primaire : #2F80ED
+   Bleu clair : #56CCF2
+   Gris clair : #F7F9FC
+   Gris bordure : #D9DDE3
+   Texte : #1A1A1A
+--------------------------------*/
+
+/* Fenêtre principale */
+QWidget {
+    background-color: #F7F9FC;
+    font-family: Segoe UI, Roboto, sans-serif;
+    font-size: 14px;
+    color: #1A1A1A;
+}
+
+/* Titre principal */
+QLabel#titleLabel {
+    color: #2F80ED;
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+/* GroupBox */
+QGroupBox {
+    border: 2px solid #D9DDE3;
+    border-radius: 8px;
+    margin-top: 12px;
+    padding: 12px;
+    font-weight: bold;
+    color: #2F80ED;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 4px;
+    background-color: #F7F9FC;
+}
+
+/* Labels */
+QLabel {
+    font-size: 14px;
+    color: #1A1A1A;
+}
+
+/* Champs texte */
+QLineEdit, QTextEdit, QSpinBox, QComboBox {
+    background-color: white;
+    border: 1px solid #D9DDE3;
+    border-radius: 6px;
+    padding: 4px;
+}
+
+QLineEdit:focus, QTextEdit:focus, QSpinBox:focus, QComboBox:focus {
+    border: 2px solid #2F80ED;
+}
+
+/* Boutons */
+QPushButton {
+    background-color: #2F80ED;
+    color: white;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #1f6bd1;
+}
+
+QPushButton:pressed {
+    background-color: #154c94;
+}
+
+/* Bouton secondaire (Annuler) */
+QPushButton#btnCancel {
+    background-color: #BDBDBD;
+    color: white;
+}
+
+QPushButton#btnCancel:hover {
+    background-color: #A0A0A0;
+}
+
+/* Bouton Ajouter une étape */
+QPushButton#btnAddStep {
+    background-color: #56CCF2;
+    color: #1A1A1A;
+}
+
+QPushButton#btnAddStep:hover {
+    background-color: #3fbbe6;
+}
+
+/* Tableau des étapes */
+QTableWidget {
+    background-color: white;
+    border: 1px solid #D9DDE3;
+    border-radius: 6px;
+    gridline-color: #D9DDE3;
+}
+
+QHeaderView::section {
+    background-color: #2F80ED;
+    color: white;
+    padding: 6px;
+    border: none;
+    font-weight: bold;
+}
+
+QTableWidget::item {
+    padding: 6px;
+}
+
+/* Scrollbars */
+QScrollBar:vertical {
+    background: #F0F0F0;
+    width: 10px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: #2F80ED;
+    min-height: 20px;
+    border-radius: 4px;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+/* Status bar */
+QStatusBar {
+    background-color: #F0F0F0;
+}
