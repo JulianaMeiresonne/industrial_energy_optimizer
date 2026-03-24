@@ -3,9 +3,7 @@ import price_kwh
 from datetime import datetime, timedelta 
 from PySide6.QtWidgets import QApplication
 import sys
-import gestion_first_page as gestion
-import json
-import random
+import gestion_affichage as gestion
 
 if __name__ == "__main__":
 #Initialisation de la base de données et insertion des prix
@@ -46,18 +44,10 @@ if __name__ == "__main__":
     with open("style_1.qss", "r") as f:
         app.setStyleSheet(f.read())
     window = gestion.MainWindow()
-    window.show()
+    window.add_machine_to_combo("Machine A")
+    window.window.show() # Affichage de la fenêtre principale de l'application
     app.exec() # Lancement de la boucle d'événements de l'application (affiche la fenêtre et attend les interactions de l'utilisateur)
-     
-    # Lecture du JSON après fermeture de la fenêtre
-    try:
-        with open("donnees_formulaire.json", "r", encoding="utf-8") as f:
-            resultat = json.load(f)
-        data_base.insert_Produit(random.randint(1000000000, 9999999999), resultat["nom_produit"], resultat["description"])
-        #data_base.insert_Etape(random.randint(1000000000, 9999999999),resultat["nom_etape"], resultat["numero_etape"], resultat["duree"])
 
-    except FileNotFoundError:
-        print("Aucun fichier JSON trouvé. Le bouton Valider n'a peut-être pas été cliqué.")
 
 
 
