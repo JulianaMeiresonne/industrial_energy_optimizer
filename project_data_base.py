@@ -41,7 +41,7 @@ if __name__ == "__main__":
 #Gestion de l'interface graphique
     app = QApplication(sys.argv)
     # Charger le thème industriel bleu
-    with open("style_1.qss", "r") as f:
+    with open("style_0.qss", "r") as f:
         app.setStyleSheet(f.read())
     window = gestion.MainWindow()
     window.add_machine_to_combo("Machine A")
