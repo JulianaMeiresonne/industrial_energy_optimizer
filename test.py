@@ -1,34 +1,40 @@
 from PySide6.QtWidgets import (
     QApplication,
-    QAbstractItemView,
-    QComboBox,
     QDoubleSpinBox,
-    QHeaderView,
-    QLabel,
     QLineEdit,
-    QMessageBox,
-    QPushButton,
+    QTextEdit,
     QSpinBox,
+    QPushButton,
+    QComboBox,
     QTableWidget,
     QTableWidgetItem,
-    QTextEdit,
-    QTimeEdit
+    QAbstractItemView,
+    QMessageBox,
+    QLabel,
+    QTimeEdit,
+    QHeaderView
 )
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QFile, Qt, QTime
-import sys
-import Optimisation_prix_production as data_base
 from PySide6.QtGui import QPixmap
 from pathlib import Path
 from datetime import datetime
+import sys
+import random
+
+import Optimisation_prix_production as data_base
+
 
 class MainWindow:
     def __init__(self):
         loader = QUiLoader()
-        ui_file = QFile("interface_complet.ui")
 
+        base_dir = Path(__file__).resolve().parent
+        ui_path = base_dir / "interface_complet.ui"
+
+        ui_file = QFile(str(ui_path))
         if not ui_file.open(QFile.ReadOnly):
-            print("Impossible d'ouvrir le fichier .ui")
+            print("Impossible d'ouvrir le fichier interface_complet.ui")
             sys.exit(1)
 
         self.window = loader.load(ui_file)
@@ -64,9 +70,8 @@ class MainWindow:
         self.inputStepDuration = self.window.findChild(QSpinBox, "inputStepDuration")
         self.btnAddStep = self.window.findChild(QPushButton, "btnAddStep")
         self.btnCreateMachine = self.window.findChild(QPushButton, "btnCreateMachine")
-        self.btnValidate = self.window.findChild(QPushButton, "btnValidate")
         self.btnCancel = self.window.findChild(QPushButton, "btnCancel")
-        # === Tableau des étapes ===
+        self.btnValidate = self.window.findChild(QPushButton, "btnValidate")
         self.tableSteps = self.window.findChild(QTableWidget, "tableSteps")
 
         # ==========================================================
@@ -83,7 +88,7 @@ class MainWindow:
         # VÉRIFICATION DES WIDGETS
         # ==========================================================
         required_widgets = {
-             # Tab 1
+            # Tab 1
             "labelCurrentDate": self.labelCurrentDate,
             "InputProductOrder": self.InputProductOrder,
             "spinBox": self.inputOrderQuantity,
@@ -94,7 +99,8 @@ class MainWindow:
             "btnRemoveOrderLine": self.btnRemoveOrderLine,
             "btnValidateOrder": self.btnValidateOrder,
             "labelPriceGraphImage": self.labelPriceGraphImage,
-                # Tab 2
+
+            # Tab 2
             "inputProductName": self.inputProductName,
             "inputDescription": self.inputDescription,
             "inputStepNumber": self.inputStepNumber,
@@ -106,7 +112,8 @@ class MainWindow:
             "btnCancel": self.btnCancel,
             "btnValidate": self.btnValidate,
             "tableSteps": self.tableSteps,
-             # Tab 3
+
+            # Tab 3
             "inputDatabaseTable": self.inputDatabaseTable,
             "btnRefreshDatabase": self.btnRefreshDatabase,
             "btnAddDatabaseRow": self.btnAddDatabaseRow,
@@ -135,6 +142,7 @@ class MainWindow:
         self.InputProductOrder.clear()
 
         self.load_products_in_order_combo()
+        self.load_machines_in_combo()
         self.refresh_database_table()
 
         # ==========================================================
@@ -159,6 +167,11 @@ class MainWindow:
         self.btnDeleteDatabaseRow.clicked.connect(self.delete_database_row)
         self.inputDatabaseTable.currentIndexChanged.connect(self.refresh_database_table)
 
+    # ==========================================================
+    # AFFICHAGE
+    # ==========================================================
+    def show(self):
+        self.window.show()
 
     # ==========================================================
     # TAB 1 : COMMANDES
@@ -290,6 +303,100 @@ class MainWindow:
         self.tableSteps.setAlternatingRowColors(True)
         self.tableSteps.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
+    def load_machines_in_combo(self):
+        self.inputStepMachine.clear()
+        try:
+            machines = data_base.select_Machine("1=1")
+            for machine in machines:
+                # suppose : [id, nom, ...]
+                self.inputStepMachine.addItem(str(machine[1]))
+        except Exception:
+            # si la DB n'est pas encore prête
+            self.inputStepMachine.addItems([
+                "Machine 1",
+                "Machine 2",
+                "Machine 3"
+            ])
+
+    def add_step_to_table(self):
+        step_number = self.inputStepNumber.value()
+        step_name = self.inputStepName.text().strip()
+        machine = self.inputStepMachine.currentText().strip()
+        duration = self.inputStepDuration.value()
+
+        if step_name == "":
+            QMessageBox.warning(self.window, "Champ manquant", "Veuillez saisir un nom d'étape.")
+            return
+
+        if machine == "":
+            QMessageBox.warning(self.window, "Machine manquante", "Veuillez sélectionner une machine.")
+            return
+
+        row = self.tableSteps.rowCount()
+        self.tableSteps.insertRow(row)
+
+        self.tableSteps.setItem(row, 0, QTableWidgetItem(str(step_number)))
+        self.tableSteps.setItem(row, 1, QTableWidgetItem(step_name))
+        self.tableSteps.setItem(row, 2, QTableWidgetItem(machine))
+        self.tableSteps.setItem(row, 3, QTableWidgetItem(str(duration)))
+        self.tableSteps.setItem(row, 4, QTableWidgetItem("Supprimer"))
+
+        self.inputStepName.clear()
+        self.inputStepDuration.setValue(1)
+
+    def add_produit_data_base(self):
+        product_name = self.inputProductName.text().strip()
+        description = self.inputDescription.toPlainText().strip()
+
+        if product_name == "":
+            QMessageBox.warning(self.window, "Champ manquant", "Veuillez saisir un nom de produit.")
+            return
+
+        if self.tableSteps.rowCount() == 0:
+            QMessageBox.warning(self.window, "Aucune étape", "Veuillez ajouter au moins une étape.")
+            return
+
+        try:
+            ID_produit = random.randint(1000000000, 9999999999)
+            data_base.insert_Produit(ID_produit, product_name, description)
+
+            for row in range(self.tableSteps.rowCount()):
+                step_name = self.tableSteps.item(row, 1).text()
+                machine_name = self.tableSteps.item(row, 2).text()
+                duration = int(self.tableSteps.item(row, 3).text())
+
+                result_machine = data_base.select_Machine(f"Nom_machine='{machine_name}'")
+                if not result_machine:
+                    raise Exception(f"Machine introuvable : {machine_name}")
+
+                ID_machine = result_machine[0][0]
+
+                data_base.insert_Etape(
+                    random.randint(1000000000, 9999999999),
+                    step_name,
+                    machine_name,
+                    duration,
+                    ID_produit,
+                    ID_machine
+                )
+
+            QMessageBox.information(
+                self.window,
+                "Succès",
+                f"Le produit '{product_name}' a bien été enregistré."
+            )
+
+            self.clear_product_form()
+            self.load_products_in_order_combo()
+            self.refresh_database_table()
+
+        except Exception as e:
+            QMessageBox.critical(
+                self.window,
+                "Erreur",
+                f"Erreur lors de l'enregistrement du produit :\n{e}"
+            )
+
     def clear_product_form(self):
         self.inputProductName.clear()
         self.inputDescription.clear()
@@ -298,73 +405,12 @@ class MainWindow:
         self.inputStepDuration.setValue(1)
         self.tableSteps.setRowCount(0)
 
-    # AJOUT D’UNE ÉTAPE DANS LE TABLEAU
-    def add_step_to_table(self):
-        step_number = self.inputStepNumber.value()
-        step_name = self.inputStepName.text().strip()
-        machine = self.inputStepMachine.currentText().strip()
-        duration = self.inputStepDuration.value()
-
-        # Vérification du nom
-        if step_name == "":
-            QMessageBox.warning(
-                self.window,
-                "Champ manquant",
-                "Veuillez saisir un nom d'étape."
-            )
-            return
-
-        # Vérification machine
-        if machine == "":
-            QMessageBox.warning(
-                self.window,
-                "Machine manquante",
-                "Veuillez sélectionner une machine ou en créer une nouvelle."
-            )
-            return
-
-        # Ajouter une ligne
-        row = self.tableSteps.rowCount()
-        self.tableSteps.insertRow(row)
-
-        # Créer les cellules
-        item_number = QTableWidgetItem(str(step_number))
-        item_name = QTableWidgetItem(step_name)
-        item_machine = QTableWidgetItem(machine)
-        item_duration = QTableWidgetItem(str(duration))
-        item_action = QTableWidgetItem("Supprimer")
-
-        # Insérer les cellules
-        self.tableSteps.setItem(row, 0, item_number)
-        self.tableSteps.setItem(row, 1, item_name)
-        self.tableSteps.setItem(row, 2, item_machine)
-        self.tableSteps.setItem(row, 3, item_duration)
-        self.tableSteps.setItem(row, 4, item_action)
-
-        # Réinitialiser certains champs
-        self.inputStepName.clear()
-        self.inputStepDuration.setValue(1)
-
-        print(f"Étape ajoutée : {step_number} - {step_name} - {machine} - {duration}s")
-
-    def add_produit_data_base(self):
-        ID_machine = data_base.select_Machine("Nom_machine='{machine}'")[0][0] # Récupérer l'ID de la machine "Four" pour l'exemple
-        ID_produit =0
-        data_base.insert_Produit(self.inputProductName.text().strip(), self.inputDescription.toPlainText().strip())
-        data_base.insert_Etape(self.inputStepName.text().strip(), self.inputStepMachine.currentText().strip(), self.inputStepDuration.value(), ID_produit,ID_machine)
-    # ---------------------------------------------------------
-    # EXEMPLE : AJOUT MANUEL D'UNE MACHINE
-    # ---------------------------------------------------------
     def add_machine_to_combo(self, machine_name):
         machine_name = machine_name.strip()
         if machine_name == "":
             return
 
-        # Éviter les doublons
-        existing_machines = [
-            self.inputStepMachine.itemText(i)
-            for i in range(self.inputStepMachine.count())
-        ]
+        existing_machines = [self.inputStepMachine.itemText(i) for i in range(self.inputStepMachine.count())]
 
         if machine_name not in existing_machines:
             self.inputStepMachine.addItem(machine_name)
@@ -372,6 +418,7 @@ class MainWindow:
     def open_machine_creation(self):
         self.machine_window = MachineWindow(on_machine_added=self.add_machine_to_combo)
         self.machine_window.window.show()
+
     # ==========================================================
     # TAB 3 : BASE DE DONNÉES
     # ==========================================================
@@ -504,8 +551,9 @@ class MachineWindow:
         self.on_machine_added = on_machine_added
 
         loader = QUiLoader()
-        ui_file = QFile("add_machine.ui")   # <-- on charge bien add_machine.ui
+        ui_path = Path(__file__).resolve().parent / "add_machine.ui"
 
+        ui_file = QFile(str(ui_path))
         if not ui_file.open(QFile.ReadOnly):
             print("Impossible d'ouvrir le fichier add_machine.ui")
             sys.exit(1)
@@ -517,29 +565,23 @@ class MachineWindow:
             print("Le chargement du fichier add_machine.ui a échoué")
             sys.exit(1)
 
-        # Champs texte
         self.inputMachineName = self.window.findChild(QLineEdit, "inputMachineName")
         self.inputOperatorLastName = self.window.findChild(QLineEdit, "inputOperatorLastName")
         self.inputOperatorFirstName = self.window.findChild(QLineEdit, "inputOperatorFirstName")
         self.inputOperatorEmail = self.window.findChild(QLineEdit, "inputOperatorEmail")
         self.inputMachineNotes = self.window.findChild(QTextEdit, "inputMachineNotes")
-
-        # Champs numériques
         self.inputCycleDuration = self.window.findChild(QSpinBox, "inputCycleDuration")
         self.inputElectricPower = self.window.findChild(QDoubleSpinBox, "inputElectricPower")
-
-        # Boutons
         self.btnSaveMachine = self.window.findChild(QPushButton, "btnSaveMachine")
         self.btnCancelMachine = self.window.findChild(QPushButton, "btnCancelMachine")
 
-        # === Vérification de sécurité ===
         required_widgets = {
             "inputMachineName": self.inputMachineName,
-            "inputCycleDuration": self.inputCycleDuration,
-            "inputElectricPower": self.inputElectricPower,
             "inputOperatorLastName": self.inputOperatorLastName,
             "inputOperatorFirstName": self.inputOperatorFirstName,
             "inputOperatorEmail": self.inputOperatorEmail,
+            "inputCycleDuration": self.inputCycleDuration,
+            "inputElectricPower": self.inputElectricPower,
             "btnSaveMachine": self.btnSaveMachine,
             "btnCancelMachine": self.btnCancelMachine,
         }
@@ -549,106 +591,56 @@ class MachineWindow:
                 print(f"Widget introuvable dans add_machine.ui : {name}")
                 sys.exit(1)
 
-        # === Connexions ===
         self.btnSaveMachine.clicked.connect(self.save_machine)
-        self.btnCancelMachine.clicked.connect(self.close_window)
-
-    def close_window(self):
-        self.window.close()
-
-    def get_machine_data(self):
-        return {
-            "name": self.inputMachineName.text().strip(),
-            "cycle_duration": int(self.inputCycleDuration.text().strip()),
-            "electric_power": float(self.inputElectricPower.text().strip()),
-            "operator_last_name": self.inputOperatorLastName.text().strip(),
-            "operator_first_name": self.inputOperatorFirstName.text().strip(),
-            "operator_email": self.inputOperatorEmail.text().strip(),
-            "notes": self.inputMachineNotes.toPlainText().strip() if self.inputMachineNotes else ""
-        }
-
-    def validate_fields(self, data):
-        if data["name"] == "":
-            QMessageBox.warning(self.window, "Champ manquant", "Veuillez saisir le nom de la machine.")
-            return False # QMessageBox.warning fait les page d'alerte 
-
-        if data["cycle_duration"] == "":
-            QMessageBox.warning(self.window, "Champ manquant", "Veuillez saisir la durée du cycle.")
-            return False
-
-        if data["electric_power"] == "":
-            QMessageBox.warning(self.window, "Champ manquant", "Veuillez saisir la puissance électrique.")
-            return False
-
-        if data["operator_last_name"] == "":
-            QMessageBox.warning(self.window, "Champ manquant", "Veuillez saisir le nom de l'opérateur.")
-            return False
-
-        if data["operator_first_name"] == "":
-            QMessageBox.warning(self.window, "Champ manquant", "Veuillez saisir le prénom de l'opérateur.")
-            return False
-
-        if data["operator_email"] == "":
-            QMessageBox.warning(self.window, "Champ manquant", "Veuillez saisir l'email de l'opérateur.")
-            return False
-
-        # Vérification numérique simple
-        try:
-            int(data["cycle_duration"])
-        except ValueError:
-            print( data["cycle_duration"])
-            print( data["cycle_duration"].type())
-            QMessageBox.warning(self.window, "Valeur invalide", "La durée du cycle doit être un nombre.")
-            return False
-
-        '''try:
-            float(data["electric_power"])
-        except ValueError:
-            QMessageBox.warning(self.window, "Valeur invalide", "La puissance électrique doit être un nombre.")
-            return False'''
-
-        # Vérification email simple
-        if "@" not in data["operator_email"] or "." not in data["operator_email"]:
-            QMessageBox.warning(self.window, "Email invalide", "Veuillez saisir une adresse email valide.")
-            return False
-
-        return True
+        self.btnCancelMachine.clicked.connect(self.window.close)
 
     def save_machine(self):
-        data = self.get_machine_data()
+        machine_name = self.inputMachineName.text().strip()
+        cycle_duration = self.inputCycleDuration.value()
+        electric_power = self.inputElectricPower.value()
+        operator_last_name = self.inputOperatorLastName.text().strip()
+        operator_first_name = self.inputOperatorFirstName.text().strip()
+        operator_email = self.inputOperatorEmail.text().strip()
 
-        if not self.validate_fields(data):
+        if machine_name == "":
+            QMessageBox.warning(self.window, "Champ manquant", "Veuillez saisir le nom de la machine.")
             return
 
-        # Conversion
-        cycle_duration = int(data["cycle_duration"])
-        electric_power = float(data["electric_power"])
-        ID_operateur = random.randint(1000000000, 9999999999)
-        try:
-            data_base.insert_Machine(random.randint(1000000000, 9999999999),data["name"],cycle_duration,electric_power,ID_operateur)
-            data_base.insert_Operateur(ID_operateur,data["operator_first_name"],data["operator_last_name"],data["operator_email"])
-            print("Machine enregistrée :")
-            print(f"Nom : {data['name']}")
-            print(f"Durée cycle : {cycle_duration}")
-            print(f"Puissance : {electric_power}")
-            print(f"Opérateur : {data['operator_first_name']} {data['operator_last_name']}")
-            print(f"Email : {data['operator_email']}")
-            print(f"Notes : {data['notes']}")
+        if operator_last_name == "" or operator_first_name == "" or operator_email == "":
+            QMessageBox.warning(self.window, "Champ manquant", "Veuillez remplir les informations opérateur.")
+            return
 
-            # Callback vers MainWindow pour ajouter la machine dans le combo
+        if "@" not in operator_email or "." not in operator_email:
+            QMessageBox.warning(self.window, "Email invalide", "Veuillez saisir une adresse email valide.")
+            return
+
+        try:
+            ID_machine = random.randint(1000000000, 9999999999)
+            ID_operateur = random.randint(1000000000, 9999999999)
+
+            data_base.insert_Machine(ID_machine, machine_name, cycle_duration, electric_power, ID_operateur)
+            data_base.insert_Operateur(ID_operateur, operator_first_name, operator_last_name, operator_email)
+
             if self.on_machine_added is not None:
-                self.on_machine_added(data["name"])
+                self.on_machine_added(machine_name)
 
             QMessageBox.information(
                 self.window,
                 "Succès",
-                f"La machine '{data['name']}' a bien été enregistrée."
+                f"La machine '{machine_name}' a bien été enregistrée."
             )
-
             self.window.close()
+
         except Exception as e:
             QMessageBox.critical(
                 self.window,
                 "Erreur",
-                f"Erreur lors de l'enregistrement de la machine :\n{e}")
+                f"Erreur lors de l'enregistrement de la machine :\n{e}"
+            )
 
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    main_window = MainWindow()
+    main_window.show()
+    sys.exit(app.exec())

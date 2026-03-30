@@ -44,15 +44,18 @@ if __name__ == "__main__":
     QLocale.setDefault(QLocale(QLocale.English, QLocale.UnitedStates))
     app = QApplication(sys.argv)
     # Charger le thème industriel bleu
-    with open("style_0.qss", "r") as f:
-        app.setStyleSheet(f.read())
+    #with open("style_0.qss", "r") as f:
+        #app.setStyleSheet(f.read())
     window = gestion.MainWindow()
     #machines = data_base.select_Machine("Nom_machine='Four'")
     #machines = data_base.select_Machine("ID_machine=1959042371")
     machines = data_base.select_Machine("TRUE") # Récupérer toutes les machines de la base de données
     print(machines)
     for a in machines:
-        window.add_machine_to_combo(a[1])  # Assuming the machine name is the first column
+        if a[1] != None:
+            window.add_machine_to_combo(a[1])  # Assuming the machine name is the first column
+        else:
+            print("Aucune machine trouvée dans la base de données.")
     window.window.show() # Affichage de la fenêtre principale de l'application
     app.exec() # Lancement de la boucle d'événements de l'application (affiche la fenêtre et attend les interactions de l'utilisateur)
 
