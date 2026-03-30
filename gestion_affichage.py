@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QSpinBox,
+    QTabWidget,
     QTableWidget,
     QTableWidgetItem,
     QTextEdit,
@@ -457,12 +458,11 @@ class MainWindow:
                 self.tableDatabase.setItem(row, col, QTableWidgetItem(str(value)))
 
     def add_database_row(self):
-        table_name = self.inputDatabaseTable.currentText()
-        QMessageBox.information(
-            self.window,
-            "Ajouter",
-            f"Fonction d'ajout à coder pour la table : {table_name}"
-        )
+        self.tabWidget = self.window.findChild(QTabWidget, "tabWidget")# Récupérer le QTabWidget
+        for i in range(self.tabWidget.count()):# Parcourir les onglets pour trouver celui qui correspond à "Produits"
+            if self.tabWidget.tabText(i) == "Produits":
+                self.tabWidget.setCurrentIndex(i)# Afficher l'onglet "Produits"
+                break
 
     def edit_database_row(self):
         current_row = self.tableDatabase.currentRow()
