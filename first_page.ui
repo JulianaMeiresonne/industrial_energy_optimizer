@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>700</width>
-    <height>750</height>
+    <width>734</width>
+    <height>764</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,123 +16,265 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="mainLayout">
     <item>
-     <widget class="QLabel" name="titleLabel">
-      <property name="font">
-       <font>
-        <pointsize>20</pointsize>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Ajouter un produit</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignHCenter</set>
-      </property>
-     </widget>
-    </item>
-
-    <item>
-     <widget class="QGroupBox" name="groupGeneral">
-      <property name="title">
-       <string>Informations générales</string>
-      </property>
-      <layout class="QFormLayout" name="formGeneral">
-       <item row="0" column="0">
-        <widget class="QLabel" name="labelProductName">
-         <property name="text">
-          <string>Nom du produit :</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="inputProductName"/>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="labelDescription">
-         <property name="text">
-          <string>Description :</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QTextEdit" name="inputDescription">
-         <property name="minimumHeight">
-          <number>80</number>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QGroupBox" name="groupSteps">
-      <property name="title">
-       <string>Étapes du process</string>
-      </property>
-      <layout class="QVBoxLayout" name="stepsLayout">
-       <item>
-        <widget class="QTableWidget" name="tableSteps">
-         <column>
-          <property name="text">
-           <string>N°</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Nom de l'étape</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Machine</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Durée (s)</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Action</string>
-          </property>
-         </column>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="bottomButtons">
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="currentIndex">
+         <number>1</number>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnCancel">
-        <property name="text">
-         <string>Annuler</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnValidate">
-        <property name="text">
-         <string>Valider</string>
-        </property>
-        <property name="default">
-         <bool>true</bool>
-        </property>
+        <widget class="QWidget" name="tab">
+         <attribute name="title">
+          <string>Tab 1</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="tab_2">
+         <attribute name="title">
+          <string>Tab 2</string>
+         </attribute>
+         <widget class="QLabel" name="titleLabel">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>0</y>
+            <width>716</width>
+            <height>36</height>
+           </rect>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>20</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Ajouter un produit</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignHCenter</set>
+          </property>
+         </widget>
+         <widget class="QGroupBox" name="groupGeneral">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>40</y>
+            <width>716</width>
+            <height>212</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Informations générales</string>
+          </property>
+          <layout class="QFormLayout" name="formGeneral">
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelProductName">
+             <property name="text">
+              <string>Nom du produit :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="inputProductName"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelDescription">
+             <property name="text">
+              <string>Description :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QTextEdit" name="inputDescription"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QGroupBox" name="groupStepInput">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>260</y>
+            <width>716</width>
+            <height>194</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Ajouter une étape</string>
+          </property>
+          <layout class="QFormLayout" name="formStepInput">
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelStepNumber">
+             <property name="text">
+              <string>Numéro :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="inputStepNumber">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelStepName">
+             <property name="text">
+              <string>Nom de l'étape :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="inputStepName"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelStepMachine">
+             <property name="text">
+              <string>Machine :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <layout class="QHBoxLayout" name="machineLayout">
+             <item>
+              <widget class="QComboBox" name="inputStepMachine"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnCreateMachine">
+               <property name="text">
+                <string>+ Nouvelle machine</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelStepDuration">
+             <property name="text">
+              <string>Durée (s) :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="inputStepDuration">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>100000</number>
+             </property>
+             <property name="value">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0" colspan="2">
+            <widget class="QPushButton" name="btnAddStep">
+             <property name="text">
+              <string>+ Ajouter une étape</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QGroupBox" name="groupSteps">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>460</y>
+            <width>716</width>
+            <height>322</height>
+           </rect>
+          </property>
+          <property name="title">
+           <string>Étapes du process</string>
+          </property>
+          <layout class="QVBoxLayout" name="stepsLayout">
+           <item>
+            <widget class="QTableWidget" name="tableSteps">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="editTriggers">
+              <set>QAbstractItemView::EditTrigger::AnyKeyPressed|QAbstractItemView::EditTrigger::DoubleClicked|QAbstractItemView::EditTrigger::EditKeyPressed|QAbstractItemView::EditTrigger::SelectedClicked</set>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+             </property>
+             <property name="rowCount">
+              <number>0</number>
+             </property>
+             <property name="columnCount">
+              <number>5</number>
+             </property>
+             <column>
+              <property name="text">
+               <string>N°</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Nom de l'étape</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Machine</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Durée (s)</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Action</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="bottomButtons">
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Orientation::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnCancel">
+               <property name="text">
+                <string>Annuler</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnValidate">
+               <property name="text">
+                <string>Valider</string>
+               </property>
+               <property name="default">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </widget>
        </widget>
       </item>
      </layout>
@@ -144,8 +286,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>700</width>
-     <height>22</height>
+     <width>734</width>
+     <height>33</height>
     </rect>
    </property>
   </widget>
