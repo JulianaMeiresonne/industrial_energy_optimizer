@@ -56,6 +56,7 @@ class MainWindow:
         # ==========================================================
         # TAB 2 : PRODUITS
         # ==========================================================
+        self.step_liste = []
         self.inputProductName = self.window.findChild(QLineEdit, "inputProductName")
         self.inputDescription = self.window.findChild(QTextEdit, "inputDescription")
         self.inputStepNumber = self.window.findChild(QSpinBox, "inputStepNumber")
@@ -346,12 +347,15 @@ class MainWindow:
         self.inputStepDuration.setValue(1)
 
         print(f"Étape ajoutée : {step_number} - {step_name} - {machine} - {duration}s")
+        self.step_liste.append((step_name, step_number, duration, machine))
 
     def add_produit_data_base(self):
-        ID_machine = data_base.select_Machine("Nom_machine='{machine}'")[0][0] # Récupérer l'ID de la machine "Four" pour l'exemple
-        ID_produit =0
-        data_base.insert_Produit(self.inputProductName.text().strip(), self.inputDescription.toPlainText().strip())
-        data_base.insert_Etape(self.inputStepName.text().strip(), self.inputStepMachine.currentText().strip(), self.inputStepDuration.value(), ID_produit,ID_machine)
+        Name_produit = self.inputProductName.text().strip()
+        data_base.insert_Produit(Name_produit, self.inputDescription.toPlainText().strip())
+        ID_produit = data_base.select_Produit(f"Nom_produit='{Name_produit}'")[0][0]
+        for step in self.step_liste:
+            ID_machine = data_base.select_Machine(f"Nom_machine='{step[3]}'")[0][0] # Récupérer l'ID de la machine "Four" pour l'exemple
+            data_base.insert_Etape(step[0], step[1], step[2], ID_produit, ID_machine)
     # ---------------------------------------------------------
     # EXEMPLE : AJOUT MANUEL D'UNE MACHINE
     # ---------------------------------------------------------
@@ -623,10 +627,11 @@ class MachineWindow:
         # Conversion
         cycle_duration = int(data["cycle_duration"])
         electric_power = float(data["electric_power"])
-        ID_operateur = random.randint(1000000000, 9999999999)
         try:
-            data_base.insert_Machine(random.randint(1000000000, 9999999999),data["name"],cycle_duration,electric_power,ID_operateur)
-            data_base.insert_Operateur(ID_operateur,data["operator_first_name"],data["operator_last_name"],data["operator_email"])
+            data_base.insert_Operateur(data["operator_last_name"], data["operator_first_name"], data["operator_email"])
+            print(data_base.select_Operateur(f"Nom_operateur='{data['operator_last_name']}' AND Prenom_operateur='{data['operator_first_name']}' AND Email='{data['operator_email']}'"))
+            ID_operateur = data_base.select_Operateur(f"Nom_operateur='{data['operator_last_name']}' AND Prenom_operateur='{data['operator_first_name']}' AND Email='{data['operator_email']}'")[0][0]
+            data_base.insert_Machine(data["name"],cycle_duration,electric_power,ID_operateur)
             print("Machine enregistrée :")
             print(f"Nom : {data['name']}")
             print(f"Durée cycle : {cycle_duration}")
