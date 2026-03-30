@@ -13,10 +13,8 @@
   <property name="windowTitle">
    <string>Ajouter un produit</string>
   </property>
-
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="mainLayout">
-
     <item>
      <widget class="QLabel" name="titleLabel">
       <property name="font">
@@ -50,7 +48,6 @@
        <item row="0" column="1">
         <widget class="QLineEdit" name="inputProductName"/>
        </item>
-
        <item row="1" column="0">
         <widget class="QLabel" name="labelDescription">
          <property name="text">
@@ -68,98 +65,6 @@
       </layout>
      </widget>
     </item>
-
-    <item>
-     <widget class="QGroupBox" name="groupStepInput">
-      <property name="title">
-       <string>Ajouter une étape</string>
-      </property>
-      <layout class="QFormLayout" name="formStepInput">
-
-       <item row="0" column="0">
-        <widget class="QLabel" name="labelStepNumber">
-         <property name="text">
-          <string>Numéro :</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QSpinBox" name="inputStepNumber">
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>999</number>
-         </property>
-        </widget>
-       </item>
-
-       <item row="1" column="0">
-        <widget class="QLabel" name="labelStepName">
-         <property name="text">
-          <string>Nom de l'étape :</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="inputStepName"/>
-       </item>
-
-       <item row="2" column="0">
-        <widget class="QLabel" name="labelStepMachine">
-         <property name="text">
-          <string>Machine :</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <layout class="QHBoxLayout" name="machineLayout">
-         <item>
-          <widget class="QComboBox" name="inputStepMachine"/>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btnCreateMachine">
-           <property name="text">
-            <string>+ Nouvelle machine</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-
-       <item row="3" column="0">
-        <widget class="QLabel" name="labelStepDuration">
-         <property name="text">
-          <string>Durée (s) :</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QSpinBox" name="inputStepDuration">
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>100000</number>
-         </property>
-         <property name="value">
-          <number>1</number>
-         </property>
-        </widget>
-       </item>
-
-       <item row="4" column="0" colspan="2">
-        <widget class="QPushButton" name="btnAddStep">
-         <property name="text">
-          <string>+ Ajouter une étape</string>
-         </property>
-        </widget>
-       </item>
-
-      </layout>
-     </widget>
-    </item>
-
     <item>
      <widget class="QGroupBox" name="groupSteps">
       <property name="title">
@@ -168,22 +73,6 @@
       <layout class="QVBoxLayout" name="stepsLayout">
        <item>
         <widget class="QTableWidget" name="tableSteps">
-         <property name="columnCount">
-          <number>5</number>
-         </property>
-         <property name="rowCount">
-          <number>0</number>
-         </property>
-         <property name="editTriggers">
-          <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::AnyKeyPressed|QAbstractItemView::SelectedClicked</set>
-         </property>
-         <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
-         <property name="alternatingRowColors">
-          <bool>true</bool>
-         </property>
-
          <column>
           <property name="text">
            <string>N°</string>
@@ -214,7 +103,6 @@
       </layout>
      </widget>
     </item>
-
     <item>
      <layout class="QHBoxLayout" name="bottomButtons">
       <item>
@@ -230,7 +118,6 @@
         </property>
        </spacer>
       </item>
-
       <item>
        <widget class="QPushButton" name="btnCancel">
         <property name="text">
@@ -238,7 +125,6 @@
         </property>
        </widget>
       </item>
-
       <item>
        <widget class="QPushButton" name="btnValidate">
         <property name="text">
@@ -251,10 +137,8 @@
       </item>
      </layout>
     </item>
-
    </layout>
   </widget>
-
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -265,7 +149,6 @@
     </rect>
    </property>
   </widget>
-
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
