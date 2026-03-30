@@ -1,21 +1,26 @@
 from PySide6.QtWidgets import (
-    QDoubleSpinBox,
-    QLineEdit,
-    QTextEdit,
-    QSpinBox,
-    QPushButton,
+    QApplication,
+    QAbstractItemView,
     QComboBox,
+    QDoubleSpinBox,
+    QHeaderView,
+    QLabel,
+    QLineEdit,
+    QMessageBox,
+    QPushButton,
+    QSpinBox,
     QTableWidget,
     QTableWidgetItem,
-    QAbstractItemView,
-    QMessageBox
+    QTextEdit,
+    QTimeEdit
 )
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtCore import QFile
+from PySide6.QtCore import QFile, Qt, QTime
 import sys
 import Optimisation_prix_production as data_base
-import random
-
+from PySide6.QtGui import QPixmap
+from pathlib import Path
+from datetime import datetime
 
 class MainWindow:
     def __init__(self):
