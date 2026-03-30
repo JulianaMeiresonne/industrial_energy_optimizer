@@ -5,7 +5,7 @@
                 {
                         "Etape": [
                                 {
-                                        "Auto": false,
+                                        "Auto": true,
                                         "PK": true,
                                         "FieldName": "ID_etape",
                                         "FieldType": "INTEGER",
@@ -40,8 +40,8 @@
                                 {
                                         "Auto": false,
                                         "PK": false,
-                                        "FieldName": "Dure",
-                                        "FieldType": "DATETIME",
+                                        "FieldName": "Duree",
+                                        "FieldType": "INTEGER",
                                         "FieldLength": "",
                                         "Unique": false,
                                         "NotNull": true,
@@ -119,7 +119,7 @@
                 {
                         "Machine": [
                                 {
-                                        "Auto": false,
+                                        "Auto": true,
                                         "PK": true,
                                         "FieldName": "ID_machine",
                                         "FieldType": "INTEGER",
@@ -144,7 +144,7 @@
                                         "Auto": false,
                                         "PK": false,
                                         "FieldName": "Duree",
-                                        "FieldType": "DATETIME",
+                                        "FieldType": "INTEGER",
                                         "FieldLength": "",
                                         "Unique": false,
                                         "NotNull": false,
@@ -233,7 +233,7 @@
                 {
                         "Operateur": [
                                 {
-                                        "Auto": false,
+                                        "Auto": true,
                                         "PK": true,
                                         "FieldName": "ID_operateur",
                                         "FieldType": "INTEGER",
@@ -347,7 +347,7 @@
                 {
                         "Commande": [
                                 {
-                                        "Auto": false,
+                                        "Auto": true,
                                         "PK": true,
                                         "FieldName": "ID_commande",
                                         "FieldType": "INTEGER",
@@ -689,7 +689,7 @@
                 {
                         "Produit": [
                                 {
-                                        "Auto": false,
+                                        "Auto": true,
                                         "PK": true,
                                         "FieldName": "ID_produit",
                                         "FieldType": "INTEGER",

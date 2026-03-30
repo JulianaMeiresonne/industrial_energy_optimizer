@@ -10,10 +10,9 @@ def createAllTables():
 	cur.execute('''
 			CREATE TABLE IF NOT EXISTS Produit
 			(
-				ID_produit INTEGER NOT NULL,
+				ID_produit INTEGER PRIMARY KEY AUTOINCREMENT,
 				Nom_produit TEXT UNIQUE NOT NULL,
-				Description_produit TEXT,
-				PRIMARY KEY (ID_produit)
+				Description_produit TEXT
 			)
 			''')
 
@@ -31,8 +30,7 @@ def createAllTables():
 	cur.execute('''
 			CREATE TABLE IF NOT EXISTS Commande
 			(
-				ID_commande INTEGER NOT NULL,
-				PRIMARY KEY (ID_commande)
+				ID_commande INTEGER PRIMARY KEY AUTOINCREMENT
 			)
 			''')
 
@@ -40,11 +38,10 @@ def createAllTables():
 	cur.execute('''
 			CREATE TABLE IF NOT EXISTS Operateur
 			(
-				ID_operateur INTEGER NOT NULL,
+				ID_operateur INTEGER PRIMARY KEY AUTOINCREMENT,
 				Nom_operateur TEXT NOT NULL,
 				Prenom_operateur TEXT NOT NULL,
-				Email TEXT NOT NULL,
-				PRIMARY KEY (ID_operateur)
+				Email TEXT NOT NULL
 			)
 			''')
 
@@ -52,12 +49,11 @@ def createAllTables():
 	cur.execute('''
 			CREATE TABLE IF NOT EXISTS Machine
 			(
-				ID_machine INTEGER NOT NULL,
+				ID_machine INTEGER PRIMARY KEY AUTOINCREMENT,
 				Nom_machine TEXT NOT NULL,
-				Duree DATETIME,
+				Duree INTEGER,
 				Puissance_elec REAL NOT NULL,
 				ID_operateur INTEGER,
-				PRIMARY KEY (ID_machine),
 				FOREIGN KEY (ID_operateur) REFERENCES Operateur(ID_operateur)
 			)
 			''')
@@ -81,13 +77,12 @@ def createAllTables():
 	cur.execute('''
 			CREATE TABLE IF NOT EXISTS Etape
 			(
-				ID_etape INTEGER NOT NULL,
+				ID_etape INTEGER PRIMARY KEY AUTOINCREMENT,
 				Nom_etape TEXT NOT NULL,
 				Numero_excution INTEGER NOT NULL,
-				Dure DATETIME NOT NULL,
+				Duree INTEGER NOT NULL,
 				ID_produit INTEGER,
 				ID_machine INTEGER,
-				PRIMARY KEY (ID_etape),
 				FOREIGN KEY (ID_produit) REFERENCES Produit(ID_produit),
 				FOREIGN KEY (ID_machine) REFERENCES Machine(ID_machine)
 			)
@@ -102,10 +97,9 @@ def createTables_Produit():
 	cur.execute('''
 			CREATE TABLE IF NOT EXISTS Produit
 			(
-				ID_produit INTEGER NOT NULL,
+				ID_produit INTEGER PRIMARY KEY AUTOINCREMENT,
 				Nom_produit TEXT UNIQUE NOT NULL,
-				Description_produit TEXT,
-				PRIMARY KEY (ID_produit)
+				Description_produit TEXT
 			)
 			''')
 	conn.commit()
@@ -133,8 +127,7 @@ def createTables_Commande():
 	cur.execute('''
 			CREATE TABLE IF NOT EXISTS Commande
 			(
-				ID_commande INTEGER NOT NULL,
-				PRIMARY KEY (ID_commande)
+				ID_commande INTEGER PRIMARY KEY AUTOINCREMENT
 			)
 			''')
 	conn.commit()
@@ -147,11 +140,10 @@ def createTables_Operateur():
 	cur.execute('''
 			CREATE TABLE IF NOT EXISTS Operateur
 			(
-				ID_operateur INTEGER NOT NULL,
+				ID_operateur INTEGER PRIMARY KEY AUTOINCREMENT,
 				Nom_operateur TEXT NOT NULL,
 				Prenom_operateur TEXT NOT NULL,
-				Email TEXT NOT NULL,
-				PRIMARY KEY (ID_operateur)
+				Email TEXT NOT NULL
 			)
 			''')
 	conn.commit()
@@ -164,12 +156,11 @@ def createTables_Machine():
 	cur.execute('''
 			CREATE TABLE IF NOT EXISTS Machine
 			(
-				ID_machine INTEGER NOT NULL,
+				ID_machine INTEGER PRIMARY KEY AUTOINCREMENT,
 				Nom_machine TEXT NOT NULL,
-				Duree DATETIME,
+				Duree INTEGER,
 				Puissance_elec REAL NOT NULL,
 				ID_operateur INTEGER,
-				PRIMARY KEY (ID_machine),
 				FOREIGN KEY (ID_operateur) REFERENCES Operateur(ID_operateur)
 			)
 			''')
@@ -203,13 +194,12 @@ def createTables_Etape():
 	cur.execute('''
 			CREATE TABLE IF NOT EXISTS Etape
 			(
-				ID_etape INTEGER NOT NULL,
+				ID_etape INTEGER PRIMARY KEY AUTOINCREMENT,
 				Nom_etape TEXT NOT NULL,
 				Numero_excution INTEGER NOT NULL,
-				Dure DATETIME NOT NULL,
+				Duree INTEGER NOT NULL,
 				ID_produit INTEGER,
 				ID_machine INTEGER,
-				PRIMARY KEY (ID_etape),
 				FOREIGN KEY (ID_produit) REFERENCES Produit(ID_produit),
 				FOREIGN KEY (ID_machine) REFERENCES Machine(ID_machine)
 			)
@@ -218,11 +208,11 @@ def createTables_Etape():
 	conn.close()
 
 # INSERT INTO Produit
-def insert_Produit(ID_produit,Nom_produit,Description_produit):
+def insert_Produit(Nom_produit,Description_produit):
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
-	sqlQuery="INSERT OR IGNORE INTO Produit (ID_produit,Nom_produit,Description_produit) "
-	sqlQuery+=f"VALUES ({ID_produit},'{Nom_produit}','{Description_produit}')"
+	sqlQuery="INSERT OR IGNORE INTO Produit (Nom_produit,Description_produit) "
+	sqlQuery+=f"VALUES ('{Nom_produit}','{Description_produit}')"
 	cur.execute(sqlQuery)
 	conn.commit()
 	conn.close()
@@ -238,31 +228,31 @@ def insert_Prix(Debut_date,Prix_kwh):
 	conn.close()
 
 # INSERT INTO Commande
-def insert_Commande(ID_commande):
+def insert_Commande():
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
-	sqlQuery="INSERT OR IGNORE INTO Commande (ID_commande) "
-	sqlQuery+=f"VALUES ({ID_commande})"
+	sqlQuery="INSERT OR IGNORE INTO Commande () "
+	sqlQuery+=f"VALUES ()"
 	cur.execute(sqlQuery)
 	conn.commit()
 	conn.close()
 
 # INSERT INTO Operateur
-def insert_Operateur(ID_operateur,Nom_operateur,Prenom_operateur,Email):
+def insert_Operateur(Nom_operateur,Prenom_operateur,Email):
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
-	sqlQuery="INSERT OR IGNORE INTO Operateur (ID_operateur,Nom_operateur,Prenom_operateur,Email) "
-	sqlQuery+=f"VALUES ({ID_operateur},'{Nom_operateur}','{Prenom_operateur}','{Email}')"
+	sqlQuery="INSERT OR IGNORE INTO Operateur (Nom_operateur,Prenom_operateur,Email) "
+	sqlQuery+=f"VALUES ('{Nom_operateur}','{Prenom_operateur}','{Email}')"
 	cur.execute(sqlQuery)
 	conn.commit()
 	conn.close()
 
 # INSERT INTO Machine
-def insert_Machine(ID_machine,Nom_machine,Duree,Puissance_elec,ID_operateur):
+def insert_Machine(Nom_machine,Duree,Puissance_elec,ID_operateur):
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
-	sqlQuery="INSERT OR IGNORE INTO Machine (ID_machine,Nom_machine,Duree,Puissance_elec,ID_operateur) "
-	sqlQuery+=f"VALUES ({ID_machine},'{Nom_machine}','{Duree}',{Puissance_elec},{ID_operateur})"
+	sqlQuery="INSERT OR IGNORE INTO Machine (Nom_machine,Duree,Puissance_elec,ID_operateur) "
+	sqlQuery+=f"VALUES ('{Nom_machine}',{Duree},{Puissance_elec},{ID_operateur})"
 	cur.execute(sqlQuery)
 	conn.commit()
 	conn.close()
@@ -278,11 +268,11 @@ def insert_LienProduitCommande(ID_produit,ID_commande,Date_depart,Prix_produit,Q
 	conn.close()
 
 # INSERT INTO Etape
-def insert_Etape(ID_etape,Nom_etape,Numero_excution,Dure,ID_produit,ID_machine):
+def insert_Etape(Nom_etape,Numero_excution,Duree,ID_produit,ID_machine):
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
-	sqlQuery="INSERT OR IGNORE INTO Etape (ID_etape,Nom_etape,Numero_excution,Dure,ID_produit,ID_machine) "
-	sqlQuery+=f"VALUES ({ID_etape},'{Nom_etape}',{Numero_excution},'{Dure}',{ID_produit},{ID_machine})"
+	sqlQuery="INSERT OR IGNORE INTO Etape (Nom_etape,Numero_excution,Duree,ID_produit,ID_machine) "
+	sqlQuery+=f"VALUES ('{Nom_etape}',{Numero_excution},{Duree},{ID_produit},{ID_machine})"
 	cur.execute(sqlQuery)
 	conn.commit()
 	conn.close()
@@ -369,7 +359,7 @@ def select_LienProduitCommande(WHERE):
 def select_Etape(WHERE):
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
-	sqlQuery="SELECT ID_etape,Nom_etape,Numero_excution,Dure,ID_produit,ID_machine FROM Etape"
+	sqlQuery="SELECT ID_etape,Nom_etape,Numero_excution,Duree,ID_produit,ID_machine FROM Etape"
 	if WHERE.strip()!="":
 		sqlQuery+=f" WHERE {WHERE}"
 	cur.execute(sqlQuery)
@@ -426,7 +416,7 @@ def update_Operateur(ID_operateur,Nom_operateur,Prenom_operateur,Email,WHERE):
 def update_Machine(ID_machine,Nom_machine,Duree,Puissance_elec,ID_operateur,WHERE):
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
-	sqlQuery=f"UPDATE Machine SET ID_machine = {ID_machine},Nom_machine='{Nom_machine}',Duree='{Duree}',Puissance_elec = {Puissance_elec},ID_operateur = {ID_operateur}"
+	sqlQuery=f"UPDATE Machine SET ID_machine = {ID_machine},Nom_machine='{Nom_machine}',Duree = {Duree},Puissance_elec = {Puissance_elec},ID_operateur = {ID_operateur}"
 	if WHERE.strip()!="":
 		sqlQuery+=f" WHERE {WHERE}"
 	cur.execute(sqlQuery)
@@ -445,10 +435,10 @@ def update_LienProduitCommande(ID_produit,ID_commande,Date_depart,Prix_produit,Q
 	conn.close()
 
 # UPDATE Etape SET fields=value WHERE condition
-def update_Etape(ID_etape,Nom_etape,Numero_excution,Dure,ID_produit,ID_machine,WHERE):
+def update_Etape(ID_etape,Nom_etape,Numero_excution,Duree,ID_produit,ID_machine,WHERE):
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
-	sqlQuery=f"UPDATE Etape SET ID_etape = {ID_etape},Nom_etape='{Nom_etape}',Numero_excution = {Numero_excution},Dure='{Dure}',ID_produit = {ID_produit},ID_machine = {ID_machine}"
+	sqlQuery=f"UPDATE Etape SET ID_etape = {ID_etape},Nom_etape='{Nom_etape}',Numero_excution = {Numero_excution},Duree = {Duree},ID_produit = {ID_produit},ID_machine = {ID_machine}"
 	if WHERE.strip()!="":
 		sqlQuery+=f" WHERE {WHERE}"
 	cur.execute(sqlQuery)
