@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (
-    QApplication,
+    QFormLayout,
     QAbstractItemView,
     QComboBox,
     QDoubleSpinBox,
@@ -467,15 +467,24 @@ class MainWindow:
     def edit_database_row(self):
         current_row = self.tableDatabase.currentRow()
         if current_row < 0:
-            QMessageBox.warning(self.window, "Aucune ligne sélectionnée", "Veuillez sélectionner une ligne.")
+            QMessageBox.warning(
+                self.window,
+                "Aucune ligne sélectionnée",
+                "Veuillez sélectionner une ligne.") 
             return
-
         table_name = self.inputDatabaseTable.currentText()
-        QMessageBox.information(
-            self.window,
-            "Modifier",
-            f"Fonction de modification à coder pour la table : {table_name}"
-        )
+        row_data = []
+        for col in range(self.tableDatabase.columnCount()):
+            item = self.tableDatabase.item(current_row, col)
+            row_data.append(item.text() if item else "")
+
+        self.edit_window = EditRowWindow(
+            table_name=table_name,
+            row_data=row_data,
+            on_save_callback=self.refresh_database_table,
+            parent=self.window)
+        
+        self.edit_window.show()
 
     def delete_database_row(self):
         table_name = self.inputDatabaseTable.currentText()
@@ -667,3 +676,160 @@ class MachineWindow:
                 "Erreur",
                 f"Erreur lors de l'enregistrement de la machine :\n{e}")
 
+
+class EditRowWindow:
+    def __init__(self, table_name, row_data, on_save_callback=None, parent=None):
+        self.table_name = table_name
+        self.row_data = row_data
+        self.on_save_callback = on_save_callback
+        self.parent = parent
+        self.inputs = {}
+
+        loader = QUiLoader()
+        ui_file = QFile("edit_row_window.ui")
+
+        if not ui_file.open(QFile.ReadOnly):
+            print("Impossible d'ouvrir le fichier .ui")
+            sys.exit(1)
+
+        self.window = loader.load(ui_file)
+        ui_file.close()
+
+        if self.window is None:
+            print("Le chargement du fichier .ui a échoué")
+            sys.exit(1)
+
+        self.labelTitle = self.window.findChild(QLabel, "labelTitle")
+        self.labelSubtitle = self.window.findChild(QLabel, "labelSubtitle")
+        self.btnSave = self.window.findChild(QPushButton, "btnSave")
+        self.btnCancel = self.window.findChild(QPushButton, "btnCancel")
+        self.formFieldsLayout = self.window.findChild(QFormLayout, "formFieldsLayout")
+
+        required = {
+            "labelTitle": self.labelTitle,
+            "labelSubtitle": self.labelSubtitle,
+            "btnSave": self.btnSave,
+            "btnCancel": self.btnCancel,
+            "formFieldsLayout": self.formFieldsLayout,
+        }
+        for name, widget in required.items():
+            if widget is None:
+                raise RuntimeError(f"Widget introuvable dans edit_row_window.ui : {name}")
+
+        self.labelTitle.setText(f"Modifier : {self.table_name}")
+        self.labelSubtitle.setText(
+            "Modifiez les champs de la ligne sélectionnée puis cliquez sur Enregistrer."
+        )
+
+        self.build_form()
+
+        self.btnSave.clicked.connect(self.save_changes)
+        self.btnCancel.clicked.connect(self.window.close)
+
+    def show(self):
+        self.window.show()
+
+    def get_labels_for_table(self):
+        if self.table_name == "Produits":
+            return ["ID", "Nom", "Description"]
+        if self.table_name == "Machines":
+            return ["ID", "Nom", "Durée", "Puissance", "ID opérateur"]
+        if self.table_name == "Étapes":
+            return ["ID", "Nom étape", "Numéro exécution", "Durée", "ID produit", "ID machine"]
+        if self.table_name == "Opérateurs":
+            return ["ID", "Nom", "Prénom", "Email"]
+        return [f"Champ {i + 1}" for i in range(len(self.row_data))]
+
+    def build_form(self):
+        labels = self.get_labels_for_table()
+
+        for i, label_text in enumerate(labels):
+            line_edit = QLineEdit()
+            line_edit.setText(str(self.row_data[i]) if i < len(self.row_data) else "")
+
+            if i == 0:
+                line_edit.setReadOnly(True)
+
+            self.inputs[label_text] = line_edit
+            self.formFieldsLayout.addRow(f"{label_text} :", line_edit)
+
+    def save_changes(self):
+        try:
+            if self.table_name == "Produits":
+                self._save_produit()
+            elif self.table_name == "Machines":
+                self._save_machine()
+            elif self.table_name == "Étapes":
+                self._save_etape()
+            elif self.table_name == "Opérateurs":
+                self._save_operateur()
+            else:
+                QMessageBox.warning(self.window, "Table non gérée", f"La table '{self.table_name}' n'est pas encore gérée.")
+                return
+
+            QMessageBox.information(self.window, "Succès", "Modification enregistrée avec succès.")
+
+            if self.on_save_callback is not None:
+                self.on_save_callback()
+
+            self.window.close()
+
+        except Exception as e:
+            QMessageBox.critical(self.window, "Erreur", f"Impossible d'enregistrer les modifications :\n{e}")
+
+    def _save_produit(self):
+        id_produit = int(self.inputs["ID"].text())
+        nom = self.inputs["Nom"].text().strip()
+        description = self.inputs["Description"].text().strip()
+
+        if nom == "":
+            raise ValueError("Le nom du produit ne peut pas être vide.")
+
+        data_base.update_Produit(id_produit, nom, description, f"ID_produit={id_produit}")
+
+    def _save_machine(self):
+        id_machine = int(self.inputs["ID"].text())
+        nom = self.inputs["Nom"].text().strip()
+        duree = int(self.inputs["Durée"].text())
+        puissance = float(self.inputs["Puissance"].text().replace(",", "."))
+        id_operateur = int(self.inputs["ID opérateur"].text())
+
+        if nom == "":
+            raise ValueError("Le nom de la machine ne peut pas être vide.")
+
+        data_base.update_Machine(id_machine, nom, duree, puissance, id_operateur, f"ID_machine={id_machine}")
+
+    def _save_etape(self):
+        id_etape = int(self.inputs["ID"].text())
+        nom_etape = self.inputs["Nom étape"].text().strip()
+        numero_execution = int(self.inputs["Numéro exécution"].text())
+        duree = int(self.inputs["Durée"].text())
+        id_produit = int(self.inputs["ID produit"].text())
+        id_machine = int(self.inputs["ID machine"].text())
+
+        if nom_etape == "":
+            raise ValueError("Le nom de l'étape ne peut pas être vide.")
+
+        data_base.update_Etape(
+            id_etape,
+            nom_etape,
+            numero_execution,
+            duree,
+            id_produit,
+            id_machine,
+            f"ID_etape={id_etape}",
+        )
+
+    def _save_operateur(self):
+        id_operateur = int(self.inputs["ID"].text())
+        nom = self.inputs["Nom"].text().strip()
+        prenom = self.inputs["Prénom"].text().strip()
+        email = self.inputs["Email"].text().strip()
+
+        if nom == "" or prenom == "" or email == "":
+            raise ValueError("Tous les champs opérateur sont obligatoires.")
+
+        if "@" not in email or "." not in email:
+            raise ValueError("Veuillez saisir une adresse email valide.")
+
+        data_base.update_Operateur(id_operateur, nom, prenom, email, f"ID_operateur={id_operateur}")
