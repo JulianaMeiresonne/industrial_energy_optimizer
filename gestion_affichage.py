@@ -407,36 +407,36 @@ class MainWindow:
             )
 
     def load_products_in_database_table(self):
-        self.tableDatabase.setColumnCount(3)
+        self.tableDatabase.setColumnCount(3)#nombre de collonnes à afficher
         self.tableDatabase.setHorizontalHeaderLabels(["ID", "Nom", "Description"])
 
-        rows = data_base.select_Produit("1=1")
+        rows = data_base.select_Produit("TRUE")
         for row_data in rows:
             row = self.tableDatabase.rowCount()
             self.tableDatabase.insertRow(row)
 
-            for col, value in enumerate(row_data[:3]):
+            for col, value in enumerate(row_data[:3]):#afficher les 3 premières colonnes (ID, Nom, Description)
                 self.tableDatabase.setItem(row, col, QTableWidgetItem(str(value)))
 
     def load_machines_in_database_table(self):
-        self.tableDatabase.setColumnCount(4)
-        self.tableDatabase.setHorizontalHeaderLabels(["ID", "Nom", "Cycle", "Puissance"])
+        self.tableDatabase.setColumnCount(5)
+        self.tableDatabase.setHorizontalHeaderLabels(["ID", "Nom","Durée" ,"Cycle", "Puissance"])
 
-        rows = data_base.select_Machine("1=1")
+        rows = data_base.select_Machine("TRUE")
         for row_data in rows:
             row = self.tableDatabase.rowCount()
             self.tableDatabase.insertRow(row)
 
-            for col, value in enumerate(row_data[:4]):
+            for col, value in enumerate(row_data[:5]): 
                 self.tableDatabase.setItem(row, col, QTableWidgetItem(str(value)))
 
     def load_steps_in_database_table(self):
         self.tableDatabase.setColumnCount(6)
         self.tableDatabase.setHorizontalHeaderLabels([
-            "ID", "Nom étape", "Machine", "Durée", "ID Produit", "ID Machine"
+            "ID", "Nom Machine", "Durée", "Puissance", "ID Produit", "ID Machine"
         ])
 
-        rows = data_base.select_Etape("1=1")
+        rows = data_base.select_Etape("TRUE")
         for row_data in rows:
             row = self.tableDatabase.rowCount()
             self.tableDatabase.insertRow(row)
@@ -448,7 +448,7 @@ class MainWindow:
         self.tableDatabase.setColumnCount(4)
         self.tableDatabase.setHorizontalHeaderLabels(["ID", "Prénom", "Nom", "Email"])
 
-        rows = data_base.select_Operateur("1=1")
+        rows = data_base.select_Operateur("TRUE")
         for row_data in rows:
             row = self.tableDatabase.rowCount()
             self.tableDatabase.insertRow(row)
@@ -478,6 +478,7 @@ class MainWindow:
         )
 
     def delete_database_row(self):
+        table_name = self.inputDatabaseTable.currentText()
         current_row = self.tableDatabase.currentRow()
         if current_row < 0:
             QMessageBox.warning(self.window, "Aucune ligne sélectionnée", "Veuillez sélectionner une ligne.")
@@ -492,6 +493,15 @@ class MainWindow:
 
         if reply == QMessageBox.No:
             return
+        elif reply == QMessageBox.Yes:
+            if table_name == "Produits":
+                data_base.delete_Produit(f"ID_produit={self.tableDatabase.item(current_row, 0).text()}")
+            elif table_name == "Machines":
+                data_base.delete_Machine(f"ID_machine={self.tableDatabase.item(current_row, 0).text()}")
+            elif table_name == "Étapes":
+                data_base.delete_Etape(f"ID_etape={self.tableDatabase.item(current_row, 0).text()}")
+            elif table_name == "Opérateurs":
+                data_base.delete_Operateur(f"ID_operateur={self.tableDatabase.item(current_row, 0).text()}")
 
         self.tableDatabase.removeRow(current_row)
         QMessageBox.information(self.window, "Suppression", "La ligne a été supprimée du tableau.")
