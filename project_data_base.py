@@ -44,8 +44,8 @@ if __name__ == "__main__":
     QLocale.setDefault(QLocale(QLocale.English, QLocale.UnitedStates))
     app = QApplication(sys.argv)
     # Charger le thème industriel bleu
-    #with open("style_0.qss", "r") as f:
-        #app.setStyleSheet(f.read())
+    with open("style_0.qss", "r") as f:
+        app.setStyleSheet(f.read())
     window = gestion.MainWindow()
     #machines = data_base.select_Machine("Nom_machine='Four'")
     #machines = data_base.select_Machine("ID_machine=1959042371")
