@@ -33,7 +33,7 @@ if __name__ == "__main__":
     print("Dernière date de prix stockée :", comp12)
     print("Date actuelle :", comp22)
     if comp12 != comp22:
-        print("nouveaux prix disponibles, mise à jour de la base de données") 
+        print("nouveaux prix disponibles") 
         data_prix = price_kwh.info_price()
         for i in range(len(data_prix.keys())):
             data_base.insert_Prix(data_prix.keys()[i], data_prix.get(data_prix.keys()[i]))
