@@ -1,6 +1,7 @@
 import Optimisation_prix_production as data_base
 import price_kwh 
 from datetime import datetime, timedelta 
+from PySide6.QtCore import QLocale
 from PySide6.QtWidgets import QApplication
 import sys
 import gestion_affichage as gestion
@@ -32,19 +33,26 @@ if __name__ == "__main__":
     print("Dernière date de prix stockée :", comp12)
     print("Date actuelle :", comp22)
     if comp12 != comp22:
-        print("probleme") 
+        print("nouveaux prix disponibles, mise à jour de la base de données") 
         data_prix = price_kwh.info_price()
         for i in range(len(data_prix.keys())):
             data_base.insert_Prix(data_prix.keys()[i], data_prix.get(data_prix.keys()[i]))
-        print("aaaaaaaaaaaaaaaaaa") 
+        print("prix mis à jour dans la base de données") 
 
 #Gestion de l'interface graphique
+# Force le point au lieu de la virgule
+    QLocale.setDefault(QLocale(QLocale.English, QLocale.UnitedStates))
     app = QApplication(sys.argv)
     # Charger le thème industriel bleu
     with open("style_0.qss", "r") as f:
         app.setStyleSheet(f.read())
     window = gestion.MainWindow()
-    window.add_machine_to_combo("Machine A")
+    #machines = data_base.select_Machine("Nom_machine='Four'")
+    #machines = data_base.select_Machine("ID_machine=1959042371")
+    machines = data_base.select_Machine("TRUE") # Récupérer toutes les machines de la base de données
+    print(machines)
+    for a in machines:
+        window.add_machine_to_combo(a[1])  # Assuming the machine name is the first column
     window.window.show() # Affichage de la fenêtre principale de l'application
     app.exec() # Lancement de la boucle d'événements de l'application (affiche la fenêtre et attend les interactions de l'utilisateur)
 
