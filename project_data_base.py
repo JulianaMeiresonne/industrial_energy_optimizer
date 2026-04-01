@@ -5,6 +5,8 @@ from PySide6.QtCore import QLocale
 from PySide6.QtWidgets import QApplication
 import sys
 import gestion_affichage as gestion
+import matplotlib.pyplot as plt
+filename = filename = f"graphique_prix_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.png"
 
 if __name__ == "__main__":
 #Initialisation de la base de données et insertion des prix
@@ -35,6 +37,10 @@ if __name__ == "__main__":
     if comp12 != comp22:
         print("nouveaux prix disponibles") 
         data_prix = price_kwh.info_price()
+        data_prix.plot()
+        plt.title('Belgian price consumption')
+        plt.savefig(filename, dpi=300, bbox_inches='tight')# Enregistrer le graphique avec une résolution de 300 dpi et des marges ajustées
+        plt.close()# Fermer la figure pour libérer de la mémoire
         for i in range(len(data_prix.keys())):
             data_base.insert_Prix(data_prix.keys()[i], data_prix.get(data_prix.keys()[i]))
         print("prix mis à jour dans la base de données") 

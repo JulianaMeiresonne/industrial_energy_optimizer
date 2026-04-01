@@ -130,7 +130,7 @@ class MainWindow:
         self.setup_database_table()
 
         self.display_current_date()
-        self.load_price_graph_image("grille_evaluation.png")
+        self.load_price_graph_image("graphique_prix_2026-03-31_18-34-44.png")
 
         self.inputStartHour.setTime(QTime.currentTime())
         self.inputStepMachine.clear()
@@ -169,17 +169,9 @@ class MainWindow:
         self.labelCurrentDate.setText(datetime.now().strftime("%d/%m/%Y"))
 
     def load_price_graph_image(self, image_name):
-        image_path = Path(__file__).resolve().parent / image_name
-
-        if image_path.exists():
-            pixmap = QPixmap(str(image_path))
-            self.labelPriceGraphImage.setPixmap(
-                pixmap.scaled(
-                    self.labelPriceGraphImage.size(),
-                    Qt.KeepAspectRatio,
-                    Qt.SmoothTransformation
-                )
-            )
+        pixmap = QPixmap(image_name)
+        if not pixmap.isNull():
+            self.labelPriceGraphImage.setPixmap(pixmap)
         else:
             self.labelPriceGraphImage.setText("Image du graphique introuvable")
 
@@ -205,11 +197,7 @@ class MainWindow:
                 self.InputProductOrder.addItem(str(produit[1]))
         except Exception:
             # si la DB n'est pas encore prête
-            self.InputProductOrder.addItems([
-                "Produit A",
-                "Produit B",
-                "Produit C"
-            ])
+            self.InputProductOrder.addItems(["Créé un produit dans l'onglet Produits"])
 
     def optimize_start_hour(self):
         # Placeholder simple
@@ -421,7 +409,7 @@ class MainWindow:
 
     def load_machines_in_database_table(self):
         self.tableDatabase.setColumnCount(5)
-        self.tableDatabase.setHorizontalHeaderLabels(["ID", "Nom","Durée" ,"Cycle", "Puissance"])
+        self.tableDatabase.setHorizontalHeaderLabels(["ID", "Nom","Durée" ,"Puissance", "ID opérateur"])
 
         rows = data_base.select_Machine("TRUE")
         for row_data in rows:
@@ -434,7 +422,7 @@ class MainWindow:
     def load_steps_in_database_table(self):
         self.tableDatabase.setColumnCount(6)
         self.tableDatabase.setHorizontalHeaderLabels([
-            "ID", "Nom Machine", "Durée", "Puissance", "ID Produit", "ID Machine"
+            "ID", "Nom Étape", "N° Éxecution", "Durée", "ID Produit", "ID Machine"
         ])
 
         rows = data_base.select_Etape("TRUE")

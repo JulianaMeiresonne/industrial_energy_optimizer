@@ -248,11 +248,20 @@
                <height>240</height>
               </size>
              </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>1</verstretch>
+              </sizepolicy>
+             </property>
              <property name="frameShape">
               <enum>QFrame::Shape::Box</enum>
              </property>
              <property name="text">
               <string>Image du graphique des prix à afficher ici</string>
+             </property>
+             <property name="scaledContents">
+              <bool>true</bool>
              </property>
              <property name="alignment">
               <set>Qt::AlignmentFlag::AlignCenter</set>
