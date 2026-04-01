@@ -1,4 +1,4 @@
-# Module généré par GenDB.py
+# Module gï¿½nï¿½rï¿½ par GenDB.py
 #===========================
 import sqlite3
 from PySide6.QtSql import QSqlDatabase, QSqlTableModel
@@ -231,9 +231,7 @@ def insert_Prix(Debut_date,Prix_kwh):
 def insert_Commande():
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
-	sqlQuery="INSERT OR IGNORE INTO Commande () "
-	sqlQuery+=f"VALUES ()"
-	cur.execute(sqlQuery)
+	cur.execute("INSERT INTO Commande DEFAULT VALUES")
 	conn.commit()
 	conn.close()
 
@@ -446,7 +444,7 @@ def update_Etape(ID_etape,Nom_etape,Numero_excution,Duree,ID_produit,ID_machine,
 	conn.close()
 
 # DELETE FROM Produit WHERE condition 
-# ATTENTION : Si pas de condition ("") efface toutes les données de la table !!!
+# ATTENTION : Si pas de condition ("") efface toutes les donnï¿½es de la table !!!
 def delete_Produit(WHERE):
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
@@ -458,7 +456,7 @@ def delete_Produit(WHERE):
 	conn.close()
 
 # DELETE FROM Prix WHERE condition 
-# ATTENTION : Si pas de condition ("") efface toutes les données de la table !!!
+# ATTENTION : Si pas de condition ("") efface toutes les donnï¿½es de la table !!!
 def delete_Prix(WHERE):
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
@@ -470,7 +468,7 @@ def delete_Prix(WHERE):
 	conn.close()
 
 # DELETE FROM Commande WHERE condition 
-# ATTENTION : Si pas de condition ("") efface toutes les données de la table !!!
+# ATTENTION : Si pas de condition ("") efface toutes les donnï¿½es de la table !!!
 def delete_Commande(WHERE):
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
@@ -482,7 +480,7 @@ def delete_Commande(WHERE):
 	conn.close()
 
 # DELETE FROM Operateur WHERE condition 
-# ATTENTION : Si pas de condition ("") efface toutes les données de la table !!!
+# ATTENTION : Si pas de condition ("") efface toutes les donnï¿½es de la table !!!
 def delete_Operateur(WHERE):
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
@@ -494,7 +492,7 @@ def delete_Operateur(WHERE):
 	conn.close()
 
 # DELETE FROM Machine WHERE condition 
-# ATTENTION : Si pas de condition ("") efface toutes les données de la table !!!
+# ATTENTION : Si pas de condition ("") efface toutes les donnï¿½es de la table !!!
 def delete_Machine(WHERE):
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
@@ -506,7 +504,7 @@ def delete_Machine(WHERE):
 	conn.close()
 
 # DELETE FROM LienProduitCommande WHERE condition 
-# ATTENTION : Si pas de condition ("") efface toutes les données de la table !!!
+# ATTENTION : Si pas de condition ("") efface toutes les donnï¿½es de la table !!!
 def delete_LienProduitCommande(WHERE):
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
@@ -518,7 +516,7 @@ def delete_LienProduitCommande(WHERE):
 	conn.close()
 
 # DELETE FROM Etape WHERE condition 
-# ATTENTION : Si pas de condition ("") efface toutes les données de la table !!!
+# ATTENTION : Si pas de condition ("") efface toutes les donnï¿½es de la table !!!
 def delete_Etape(WHERE):
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
@@ -530,7 +528,7 @@ def delete_Etape(WHERE):
 	conn.close()
 
 # DROP TABLE Produit
-# ATTENTION : cette fonction détruit la table, elle devra (éventuellement) être recréée
+# ATTENTION : cette fonction dï¿½truit la table, elle devra (ï¿½ventuellement) ï¿½tre recrï¿½ï¿½e
 def drop_Produit():
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
@@ -540,7 +538,7 @@ def drop_Produit():
 	conn.close()
 
 # DROP TABLE Prix
-# ATTENTION : cette fonction détruit la table, elle devra (éventuellement) être recréée
+# ATTENTION : cette fonction dï¿½truit la table, elle devra (ï¿½ventuellement) ï¿½tre recrï¿½ï¿½e
 def drop_Prix():
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
@@ -550,7 +548,7 @@ def drop_Prix():
 	conn.close()
 
 # DROP TABLE Commande
-# ATTENTION : cette fonction détruit la table, elle devra (éventuellement) être recréée
+# ATTENTION : cette fonction dï¿½truit la table, elle devra (ï¿½ventuellement) ï¿½tre recrï¿½ï¿½e
 def drop_Commande():
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
@@ -560,7 +558,7 @@ def drop_Commande():
 	conn.close()
 
 # DROP TABLE Operateur
-# ATTENTION : cette fonction détruit la table, elle devra (éventuellement) être recréée
+# ATTENTION : cette fonction dï¿½truit la table, elle devra (ï¿½ventuellement) ï¿½tre recrï¿½ï¿½e
 def drop_Operateur():
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
@@ -570,7 +568,7 @@ def drop_Operateur():
 	conn.close()
 
 # DROP TABLE Machine
-# ATTENTION : cette fonction détruit la table, elle devra (éventuellement) être recréée
+# ATTENTION : cette fonction dï¿½truit la table, elle devra (ï¿½ventuellement) ï¿½tre recrï¿½ï¿½e
 def drop_Machine():
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
@@ -580,7 +578,7 @@ def drop_Machine():
 	conn.close()
 
 # DROP TABLE LienProduitCommande
-# ATTENTION : cette fonction détruit la table, elle devra (éventuellement) être recréée
+# ATTENTION : cette fonction dï¿½truit la table, elle devra (ï¿½ventuellement) ï¿½tre recrï¿½ï¿½e
 def drop_LienProduitCommande():
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()
@@ -590,7 +588,7 @@ def drop_LienProduitCommande():
 	conn.close()
 
 # DROP TABLE Etape
-# ATTENTION : cette fonction détruit la table, elle devra (éventuellement) être recréée
+# ATTENTION : cette fonction dï¿½truit la table, elle devra (ï¿½ventuellement) ï¿½tre recrï¿½ï¿½e
 def drop_Etape():
 	conn = sqlite3.connect("Optimisation_prix_production.db")
 	cur = conn.cursor()

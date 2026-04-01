@@ -1,0 +1,104 @@
+À        : bmsi30@yahoo.com
+Sujet    : Planning validé de production
+----------------------------------------------------------------------------------------------------
+Bonjour Lucas Martin,
+
+Voici votre planning de production.
+Heure de génération : 22:59 le 01/04/2026.
+
+Produit      : Brioche
+Machine      : Pétrin
+Étape        : Pétrissage pâte brioche
+Heure début  : 23:59
+Heure fin    : 00:34
+
+Produit      : Brioche
+Machine      : Chambre de pousse
+Étape        : Première pousse brioche
+Heure début  : 00:34
+Heure fin    : 00:59
+
+Produit      : Brioche
+Machine      : Façonneuse
+Étape        : Façonnage brioche
+Heure début  : 00:59
+Heure fin    : 01:44
+
+Produit      : Brioche
+Machine      : Chambre de pousse
+Étape        : Deuxième pousse brioche
+Heure début  : 01:44
+Heure fin    : 02:34
+
+Produit      : Brioche
+Machine      : Four industriel
+Étape        : Cuisson brioche
+Heure début  : 02:34
+Heure fin    : 03:19
+
+Produit      : Brioche
+Machine      : Pétrin
+Étape        : Pétrissage pâte brioche
+Heure début  : 03:19
+Heure fin    : 03:54
+
+Produit      : Brioche
+Machine      : Chambre de pousse
+Étape        : Première pousse brioche
+Heure début  : 03:54
+Heure fin    : 04:19
+
+Produit      : Brioche
+Machine      : Façonneuse
+Étape        : Façonnage brioche
+Heure début  : 04:19
+Heure fin    : 05:04
+
+Produit      : Brioche
+Machine      : Chambre de pousse
+Étape        : Deuxième pousse brioche
+Heure début  : 05:04
+Heure fin    : 05:54
+
+Produit      : Brioche
+Machine      : Four industriel
+Étape        : Cuisson brioche
+Heure début  : 05:54
+Heure fin    : 06:39
+
+Produit      : Brioche
+Machine      : Pétrin
+Étape        : Pétrissage pâte brioche
+Heure début  : 06:39
+Heure fin    : 07:14
+
+Produit      : Brioche
+Machine      : Chambre de pousse
+Étape        : Première pousse brioche
+Heure début  : 07:14
+Heure fin    : 07:39
+
+Produit      : Brioche
+Machine      : Façonneuse
+Étape        : Façonnage brioche
+Heure début  : 07:39
+Heure fin    : 08:24
+
+Produit      : Brioche
+Machine      : Chambre de pousse
+Étape        : Deuxième pousse brioche
+Heure début  : 08:24
+Heure fin    : 09:14
+
+Produit      : Brioche
+Machine      : Four industriel
+Étape        : Cuisson brioche
+Heure début  : 09:14
+Heure fin    : 09:59
+
+Merci de préparer votre poste et de suivre ce planning.
+
+Cordialement,
+Application de gestion de production
+----------------------------------------------------------------------------------------------------
+
