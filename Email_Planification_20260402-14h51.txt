@@ -1,0 +1,44 @@
+À        : bmsi30@yahoo.com
+Sujet    : Planning validé de production
+----------------------------------------------------------------------------------------------------
+Bonjour Lucas Martin,
+
+Voici votre planning de production.
+Heure de génération : 14:51 le 02/04/2026.
+
+Produit      : Brioche
+Machine      : Pétrin
+Tâche        : Pétrissage pâte brioche
+Heure début  : 16:50
+Heure fin    : 17:25
+
+Produit      : Brioche
+Machine      : Chambre de pousse
+Tâche        : Première pousse brioche
+Heure début  : 17:25
+Heure fin    : 17:50
+
+Produit      : Brioche
+Machine      : Façonneuse
+Tâche        : Façonnage brioche
+Heure début  : 17:50
+Heure fin    : 18:35
+
+Produit      : Brioche
+Machine      : Chambre de pousse
+Tâche        : Deuxième pousse brioche
+Heure début  : 18:35
+Heure fin    : 19:25
+
+Produit      : Brioche
+Machine      : Four industriel
+Tâche        : Cuisson brioche
+Heure début  : 19:25
+Heure fin    : 20:10
+
+Merci de préparer votre poste et de suivre ce planning.
+
+Cordialement,
+Application de gestion de production
+----------------------------------------------------------------------------------------------------
+

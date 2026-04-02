@@ -9,9 +9,7 @@ import matplotlib.pyplot as plt
 filename = filename = f"graphique_prix_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.png"
 
 if __name__ == "__main__":
-#Initialisation de la base de données et insertion des prix
     data_base.createAllTables()
-   # data_base.delete_Prix("") #Supprimer les prix déjà stockés dans la base de données pour éviter les doublons
 
 #Récupérer la dernière date de prix stockée dans la base de données
     data = data_base.select_Prix("Debut_date")
@@ -26,10 +24,10 @@ if __name__ == "__main__":
 
 #Récupérer la date actuelle et la comparer avec la dernière date de prix stockée
     comp2 = datetime.now()
-    if comp2.hour >= 12: #Si l'heure actuelle est supérieure ou égale à 12h, on considère que les prix du jour sont disponibles!!!!
-        comp2 = comp2 + timedelta(days=1)
     comp2 = str(comp2)
     comp22 = comp2.split(" ")[0]
+    if  datetime.now().hour >= 12 and comp12 != comp22: #Si l'heure actuelle est supérieure ou égale à 12h, on considère que les prix du jour sont disponibles!!!!
+        comp2 = comp2 + timedelta(days=1)
 
     #Comparer la dernière date de prix stockée avec la date actuelle
     print("Dernière date de prix stockée :", comp12)

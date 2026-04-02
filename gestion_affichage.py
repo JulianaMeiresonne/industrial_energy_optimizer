@@ -13,10 +13,10 @@ from PySide6.QtWidgets import (
     QTableWidget,
     QTableWidgetItem,
     QTextEdit,
-    QTimeEdit
+    QTimeEdit,
 )
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtCore import QFile, Qt, QTime
+from PySide6.QtCore import QFile, QTime
 from PySide6.QtGui import QPixmap
 from datetime import datetime, timedelta
 import smtplib
@@ -121,6 +121,12 @@ class MainWindow:
                 print(f"Widget introuvable dans le .ui : {name}")
                 sys.exit(1)
 
+        # Création des tables si besoin
+        try:
+            data_base.createAllTables()
+        except Exception as e:
+            print(f"Attention : impossible d'initialiser les tables : {e}")
+
         # ==========================================================
         # CONFIGURATION INITIALE
         # ==========================================================
@@ -129,7 +135,7 @@ class MainWindow:
         self.setup_database_table()
 
         self.display_current_date()
-        self.load_price_graph_image("graphique_prix_2026-03-31_18-34-44.png")
+        self.load_price_graph_image("graphique_prix_2026-04-02_13-04-30.png")
 
         self.inputStartHour.setTime(QTime.currentTime())
         self.inputStepMachine.clear()
@@ -159,6 +165,17 @@ class MainWindow:
         self.inputDatabaseTable.currentIndexChanged.connect(self.refresh_database_table)
 
     # ==========================================================
+    # HELPERS GÉNÉRAUX
+    # ==========================================================
+
+    def escape_sql(self, value):
+        return str(value).replace("'", "''")
+
+    def get_table_item_text(self, table, row, col, default=""):
+        item = table.item(row, col)
+        return item.text().strip() if item else default
+
+    # ==========================================================
     # HELPERS BDD
     # ==========================================================
 
@@ -179,6 +196,16 @@ class MainWindow:
         rows = data_base.select_Produit(f"ID_produit={product_id}")
         return rows[0] if rows else None
 
+    def get_product_by_name(self, product_name):
+        product_name = self.escape_sql(product_name)
+        rows = data_base.select_Produit(f"Nom_produit='{product_name}'")
+        return rows[0] if rows else None
+
+    def get_machine_by_name(self, machine_name):
+        machine_name = self.escape_sql(machine_name)
+        rows = data_base.select_Machine(f"Nom_machine='{machine_name}'")
+        return rows[0] if rows else None
+
     def get_product_name_by_id(self, product_id):
         product = self.get_product_by_id(product_id)
         return product[1] if product and len(product) > 1 else f"Produit #{product_id}"
@@ -196,54 +223,43 @@ class MainWindow:
     # ==========================================================
     # CALCULS : PRIX, HEURE DE FIN, ALERTES, E-MAILS
     # ==========================================================
-    def save_order_to_database(self):
-        """
-        Enregistre la commande en utilisant :
-        - insert_Commande()
-        - insert_LienProduitCommande()
-        - select_Commande()
-        """
 
+    def save_order_to_database(self):
         if self.tableOrders.rowCount() == 0:
             return None
 
-        # 1) créer la commande
         data_base.insert_Commande()
-
-        # 2) récupérer tous les ID_commande
         rows = data_base.select_Commande("TRUE")
 
         if not rows:
             raise Exception("Aucune commande trouvée après insertion.")
 
-        # 3) prendre le dernier ID (le plus grand)
         id_commande = max(row[0] for row in rows)
 
-        # 4) enregistrer les lignes produits
         for row in range(self.tableOrders.rowCount()):
-            product_item = self.tableOrders.item(row, 0)
-            quantity_item = self.tableOrders.item(row, 1)
-            price_item = self.tableOrders.item(row, 2)
-            start_item = self.tableOrders.item(row, 3)
+            product_name = self.get_table_item_text(self.tableOrders, row, 0)
+            quantity_text = self.get_table_item_text(self.tableOrders, row, 1)
+            price_text = self.get_table_item_text(self.tableOrders, row, 2)
+            start_text = self.get_table_item_text(self.tableOrders, row, 3)
 
-            if not product_item:
+            if not product_name or not quantity_text or not start_text:
                 continue
 
-            product_name = product_item.text().strip()
-            quantity = int(quantity_item.text())
-            start_text = start_item.text().strip()
-
-            price_text = price_item.text().replace("€", "").strip().replace(",", ".")
             try:
-                prix_produit = float(price_text)
-            except:
+                quantity = int(quantity_text)
+            except ValueError:
+                continue
+
+            try:
+                prix_produit = float(price_text.replace("€", "").replace(",", ".").strip())
+            except ValueError:
                 prix_produit = 0.0
 
-            result_product = data_base.select_Produit(f"Nom_produit='{product_name}'")
-            if not result_product:
+            product = self.get_product_by_name(product_name)
+            if not product:
                 continue
 
-            id_produit = result_product[0][0]
+            id_produit = product[0]
 
             date_depart = datetime.combine(
                 datetime.now().date(),
@@ -259,13 +275,8 @@ class MainWindow:
             )
 
         return id_commande
+
     def get_today_price_for_time(self, start_hour):
-        """
-        Retourne le prix du kWh correspondant à l'heure demandée.
-        Cherche d'abord une correspondance exacte heure+minute,
-        puis une correspondance sur l'heure seule,
-        puis le prix le plus proche avant l'heure demandée.
-        """
         rows = data_base.select_Prix("TRUE")
         if not rows:
             return 0.0
@@ -305,28 +316,14 @@ class MainWindow:
 
         if exact_match is not None:
             return exact_match
-
         if same_hour_match is not None:
             return same_hour_match
-
         if nearest_before is not None:
             return nearest_before[1]
 
         return 0.0
 
     def compute_product_cost_and_end(self, product_id, start_dt, quantity):
-        """
-        Calcule :
-        - le coût total du produit ;
-        - l'heure de fin du produit ;
-        - les alertes de timing ;
-        - les alertes de prix ;
-        - les informations nécessaires à l'envoi des e-mails.
-
-        Règle appliquée :
-        pour chaque étape :
-            durée_réelle = durée_machine * durée_étape
-        """
         steps = self.get_steps_for_product(product_id)
         product_name = self.get_product_name_by_id(product_id)
 
@@ -345,8 +342,7 @@ class MainWindow:
 
         for _ in range(quantity):
             for step in steps:
-                # (ID_etape, Nom_etape, Numero_excution, Duree, ID_produit, ID_machine)
-                step_id, step_name, numero_execution, step_duration, _, machine_id = step
+                _, step_name, _, step_duration, _, machine_id = step
 
                 machine = self.get_machine_by_id(machine_id)
                 if not machine:
@@ -355,7 +351,6 @@ class MainWindow:
                     )
                     continue
 
-                # (ID_machine, Nom_machine, Duree, Puissance_elec, ID_operateur)
                 _, machine_name, machine_duration, machine_power_kw, operator_id = machine
 
                 machine_duration = float(str(machine_duration).replace(",", "."))
@@ -382,9 +377,7 @@ class MainWindow:
 
                 operator = self.get_operator_by_id(operator_id)
                 if operator:
-                    # (ID_operateur, Nom_operateur, Prenom_operateur, Email)
                     _, nom_operateur, prenom_operateur, email_operateur = operator
-
                     email_lines.append({
                         "email": email_operateur,
                         "operator_name": f"{prenom_operateur} {nom_operateur}",
@@ -413,10 +406,6 @@ class MainWindow:
         return total_cost, end_dt, timing_alerts, price_alerts, email_lines
 
     def check_price_alerts(self, seuil_prix):
-        """
-        Parcourt toute la liste des prix de la base de données
-        et retourne les alertes pour les prix inférieurs au seuil donné.
-        """
         alerts = []
         rows = data_base.select_Prix("TRUE")
 
@@ -440,97 +429,79 @@ class MainWindow:
 
     def send_order_emails(self, email_lines):
         """
-        Envoie les e-mails aux opérateurs.
-        Les lignes sont regroupées par adresse e-mail.
+        Écrit les e-mails des opérateurs dans un fichier texte
+        au lieu de les envoyer par SMTP.
         """
         if not email_lines:
+            QMessageBox.warning(
+                self.window,
+                "Planning",
+                "Aucun planning disponible pour générer les e-mails."
+            )
             return
 
-        # ======================================================
-        # CONFIGURATION SMTP
-        # IMPORTANT :
-        # - Si tu utilises Yahoo, garde smtp.mail.yahoo.com
-        # - Si tu utilises Gmail, mets smtp.gmail.com
-        # - Utilise un mot de passe d'application si nécessaire
-        # ======================================================
-        sender_email = "bmsi30@yahoo.com"
-        sender_password = "JUNK_MAIL"
+        heure_str = datetime.now().strftime("%H:%M le %d/%m/%Y")
+        fichier_mail = f"Email_Planification_{datetime.now().strftime('%Y%m%d-%Hh%M')}.txt"
 
-        smtp_server = "smtp.mail.yahoo.com"
-        smtp_port = 587
+        emails_ecrits = 0
+        emails_erreurs = 0
 
         grouped_by_email = {}
 
         for line in email_lines:
             recipient = line.get("email", "").strip()
-            if not recipient:
-                continue
-            grouped_by_email.setdefault(recipient, []).append(line)
+            if recipient:
+                grouped_by_email.setdefault(recipient, []).append(line)
 
         if not grouped_by_email:
             QMessageBox.warning(
                 self.window,
-                "E-mails",
+                "Planning",
                 "Aucune adresse e-mail valide trouvée pour les opérateurs."
             )
             return
 
-        server = None
-
         try:
-            server = smtplib.SMTP(smtp_server, smtp_port, timeout=20)
-            server.ehlo()
-            server.starttls()
-            server.ehlo()
-            server.login(sender_email, sender_password)
+            with open(fichier_mail, "w", encoding="utf-8") as f:
+                for email_operateur, lines in grouped_by_email.items():
+                    operator_name = lines[0].get("operator_name", "Opérateur")
 
-            success_count = 0
+                    f.write(f"À        : {email_operateur}\n")
+                    f.write("Sujet    : Planning validé de production\n")
+                    f.write("-" * 100 + "\n")
+                    f.write(f"Bonjour {operator_name},\n\n")
+                    f.write("Voici votre planning de production.\n")
+                    f.write(f"Heure de génération : {heure_str}.\n\n")
 
-            for recipient_email, lines in grouped_by_email.items():
-                msg = EmailMessage()
-                msg["Subject"] = "Planning de production du jour"
-                msg["From"] = sender_email
-                msg["To"] = recipient_email
+                    for line in lines:
+                        f.write(f"Produit      : {line.get('product_name', 'Produit inconnu')}\n")
+                        f.write(f"Machine      : {line.get('machine_name', 'Machine inconnue')}\n")
+                        f.write(f"Tâche        : {line.get('step_name', 'Étape inconnue')}\n")
+                        f.write(f"Heure début  : {line.get('start', '--:--')}\n")
+                        f.write(f"Heure fin    : {line.get('end', '--:--')}\n")
+                        f.write("\n")
 
-                operator_name = lines[0].get("operator_name", "Opérateur")
+                    f.write("Merci de préparer votre poste et de suivre ce planning.\n\n")
+                    f.write("Cordialement,\n")
+                    f.write("Application de gestion de production\n")
+                    f.write("-" * 100 + "\n\n")
 
-                body = f"Bonjour {operator_name},\n\n"
-                body += "Voici votre planning de production :\n\n"
-
-                for line in lines:
-                    body += (
-                        f"- Produit : {line.get('product_name', 'Produit inconnu')}\n"
-                        f"  Machine : {line['machine_name']}\n"
-                        f"  Étape   : {line['step_name']}\n"
-                        f"  Horaire : {line['start']} -> {line['end']}\n\n"
-                    )
-
-                body += "Cordialement,\n"
-                body += "Application de gestion de production"
-
-                msg.set_content(body)
-                server.send_message(msg)
-                success_count += 1
-                print(f"E-mail envoyé à {recipient_email}")
+                    emails_ecrits += 1
+                    print(f"E-mail écrit pour {operator_name} ({email_operateur})")
 
             QMessageBox.information(
                 self.window,
-                "E-mails envoyés",
-                f"{success_count} e-mail(s) envoyé(s) avec succès."
+                "Fichier généré",
+                f"{emails_ecrits} e-mail(s) écrit(s) dans le fichier :\n{fichier_mail}"
             )
 
         except Exception as e:
+            emails_erreurs += 1
             QMessageBox.critical(
                 self.window,
-                "Erreur d'envoi",
-                f"Erreur lors de l'envoi des e-mails :\n{e}"
+                "Erreur",
+                f"Erreur lors de l'écriture du fichier mail :\n{e}"
             )
-        finally:
-            if server is not None:
-                try:
-                    server.quit()
-                except Exception:
-                    pass
 
     # ==========================================================
     # TAB 1 : COMMANDES
@@ -594,13 +565,6 @@ class MainWindow:
         )
 
     def add_order_line(self):
-        """
-        Ajoute une ligne dans le tableau des commandes.
-        Calcule directement :
-        - le prix estimé ;
-        - l'heure de fin ;
-        - les alertes éventuelles.
-        """
         product_name = self.InputProductOrder.currentText().strip()
         quantity = self.inputOrderQuantity.value()
         start_time = self.inputStartHour.time()
@@ -613,19 +577,19 @@ class MainWindow:
             QMessageBox.warning(self.window, "Valeur invalide", "La quantité doit être supérieure à 0.")
             return
 
-        result_product = data_base.select_Produit(f"Nom_produit='{product_name}'")
-        if not result_product:
+        product = self.get_product_by_name(product_name)
+        if not product:
             QMessageBox.warning(self.window, "Produit introuvable", f"Le produit '{product_name}' est introuvable.")
             return
 
-        product_id = result_product[0][0]
+        product_id = product[0]
 
         start_dt = datetime.combine(
             datetime.now().date(),
             datetime.strptime(start_time.toString("HH:mm"), "%H:%M").time()
         )
 
-        estimated_price, end_dt, timing_messages, price_messages, detail_lines = self.compute_product_cost_and_end(
+        estimated_price, end_dt, timing_messages, price_messages, _ = self.compute_product_cost_and_end(
             product_id, start_dt, quantity
         )
 
@@ -652,14 +616,6 @@ class MainWindow:
         self.tableOrders.removeRow(current_row)
 
     def validate_order(self):
-        """
-        Valide toute la commande :
-        - recalcule les prix ;
-        - recalcule les heures de fin ;
-        - regroupe les alertes ;
-        - prépare les e-mails des opérateurs ;
-        - vérifie tous les prix de la journée sous un seuil donné.
-        """
         if self.tableOrders.rowCount() == 0:
             QMessageBox.warning(self.window, "Commande vide", "Veuillez ajouter au moins un produit.")
             return
@@ -670,16 +626,25 @@ class MainWindow:
         all_email_lines = []
 
         for row in range(self.tableOrders.rowCount()):
-            product_name = self.tableOrders.item(row, 0).text().strip()
-            quantity = int(self.tableOrders.item(row, 1).text())
-            start_text = self.tableOrders.item(row, 3).text().strip()
+            product_name = self.get_table_item_text(self.tableOrders, row, 0)
+            quantity_text = self.get_table_item_text(self.tableOrders, row, 1)
+            start_text = self.get_table_item_text(self.tableOrders, row, 3)
 
-            result_product = data_base.select_Produit(f"Nom_produit='{product_name}'")
-            if not result_product:
+            if not product_name or not quantity_text or not start_text:
+                continue
+
+            try:
+                quantity = int(quantity_text)
+            except ValueError:
+                all_timing_alerts.append(f"Quantité invalide pour '{product_name}'")
+                continue
+
+            product = self.get_product_by_name(product_name)
+            if not product:
                 all_timing_alerts.append(f"Produit introuvable : '{product_name}'")
                 continue
 
-            product_id = result_product[0][0]
+            product_id = product[0]
 
             start_dt = datetime.combine(
                 datetime.now().date(),
@@ -702,12 +667,14 @@ class MainWindow:
         global_price_alerts = self.check_price_alerts(seuil_prix)
 
         if global_price_alerts:
-            all_price_alerts.append(
-                f"Prix inférieurs à {seuil_prix:.2f} €/kWh aujourd'hui :"
-            )
+            all_price_alerts.append(f"Prix inférieurs à {seuil_prix:.2f} €/kWh aujourd'hui :")
             all_price_alerts.extend(global_price_alerts)
 
-        self.send_order_emails(all_email_lines)
+        try:
+            self.send_order_emails(all_email_lines)
+        except Exception as e:
+            all_price_alerts.append(f"Erreur d'envoi e-mail : {e}")
+
         try:
             id_commande = self.save_order_to_database()
         except Exception as e:
@@ -717,7 +684,12 @@ class MainWindow:
                 f"Impossible d'enregistrer la commande :\n{e}"
             )
             return
-        message = (f"Commande enregistrée avec succès.\n"f"N° commande : {id_commande}\n"f"Prix total estimé : {total_price:.2f} €")
+
+        message = (
+            f"Commande enregistrée avec succès.\n"
+            f"N° commande : {id_commande}\n"
+            f"Prix total estimé : {total_price:.2f} €"
+        )
 
         if all_timing_alerts:
             message += "\n\nAlertes de timing :\n" + "\n".join(all_timing_alerts)
@@ -783,7 +755,6 @@ class MainWindow:
         self.inputStepName.clear()
         self.inputStepDuration.setValue(1)
 
-        print(f"Étape ajoutée : {step_number} - {step_name} - {machine} - {duration}s")
         self.step_liste.append((step_name, step_number, duration, machine))
 
     def add_produit_data_base(self):
@@ -797,23 +768,32 @@ class MainWindow:
             QMessageBox.warning(self.window, "Aucune étape", "Veuillez ajouter au moins une étape.")
             return
 
-        data_base.insert_Produit(name_produit, self.inputDescription.toPlainText().strip())
-        result_produit = data_base.select_Produit(f"Nom_produit='{name_produit}'")
+        try:
+            data_base.insert_Produit(name_produit, self.inputDescription.toPlainText().strip())
+        except Exception as e:
+            QMessageBox.critical(self.window, "Erreur", f"Impossible d'insérer le produit :\n{e}")
+            return
+
+        result_produit = self.get_product_by_name(name_produit)
 
         if not result_produit:
             QMessageBox.critical(self.window, "Erreur", "Impossible de retrouver le produit après insertion.")
             return
 
-        ID_produit = result_produit[0][0]
+        id_produit = result_produit[0]
 
         for step in self.step_liste:
-            result_machine = data_base.select_Machine(f"Nom_machine='{step[3]}'")
-            if not result_machine:
+            machine = self.get_machine_by_name(step[3])
+            if not machine:
                 QMessageBox.critical(self.window, "Erreur", f"Machine introuvable : {step[3]}")
                 return
 
-            ID_machine = result_machine[0][0]
-            data_base.insert_Etape(step[0], step[1], step[2], ID_produit, ID_machine)
+            id_machine = machine[0]
+            try:
+                data_base.insert_Etape(step[0], step[1], step[2], id_produit, id_machine)
+            except Exception as e:
+                QMessageBox.critical(self.window, "Erreur", f"Impossible d'insérer l'étape '{step[0]}' :\n{e}")
+                return
 
         QMessageBox.information(self.window, "Succès", f"Le produit '{name_produit}' a bien été enregistré.")
         self.clear_product_form()
@@ -889,19 +869,13 @@ class MainWindow:
             row = self.tableDatabase.rowCount()
             self.tableDatabase.insertRow(row)
 
-            valeurs = list(row_data[:5])
-
-            if len(valeurs) >= 5:
-                id_operateur = valeurs[4]
-                valeurs[4] = self.get_operator_name_by_id(id_operateur)
-
-            for col, value in enumerate(valeurs):
+            for col, value in enumerate(row_data[:5]):
                 self.tableDatabase.setItem(row, col, QTableWidgetItem(str(value)))
 
     def load_steps_in_database_table(self):
         self.tableDatabase.setColumnCount(6)
         self.tableDatabase.setHorizontalHeaderLabels([
-            "ID", "Nom Étape", "N° Exécution", "Durée", "Produit", "Machine"
+            "ID", "Nom Étape", "N° Exécution", "Durée", "ID produit", "ID machine"
         ])
 
         rows = data_base.select_Etape("TRUE")
@@ -909,14 +883,7 @@ class MainWindow:
             row = self.tableDatabase.rowCount()
             self.tableDatabase.insertRow(row)
 
-            id_etape, nom_etape, numero_execution, duree, id_produit, id_machine = row_data[:6]
-
-            nom_produit = self.get_product_name_by_id(id_produit)
-            nom_machine = self.get_machine_name_by_id(id_machine)
-
-            values = [id_etape, nom_etape, numero_execution, duree, nom_produit, nom_machine]
-
-            for col, value in enumerate(values):
+            for col, value in enumerate(row_data[:6]):
                 self.tableDatabase.setItem(row, col, QTableWidgetItem(str(value)))
 
     def load_operators_in_database_table(self):
@@ -982,14 +949,18 @@ class MainWindow:
         if reply == QMessageBox.No:
             return
 
-        if table_name == "Produits":
-            data_base.delete_Produit(f"ID_produit={self.tableDatabase.item(current_row, 0).text()}")
-        elif table_name == "Machines":
-            data_base.delete_Machine(f"ID_machine={self.tableDatabase.item(current_row, 0).text()}")
-        elif table_name == "Étapes":
-            data_base.delete_Etape(f"ID_etape={self.tableDatabase.item(current_row, 0).text()}")
-        elif table_name == "Opérateurs":
-            data_base.delete_Operateur(f"ID_operateur={self.tableDatabase.item(current_row, 0).text()}")
+        try:
+            if table_name == "Produits":
+                data_base.delete_Produit(f"ID_produit={self.tableDatabase.item(current_row, 0).text()}")
+            elif table_name == "Machines":
+                data_base.delete_Machine(f"ID_machine={self.tableDatabase.item(current_row, 0).text()}")
+            elif table_name == "Étapes":
+                data_base.delete_Etape(f"ID_etape={self.tableDatabase.item(current_row, 0).text()}")
+            elif table_name == "Opérateurs":
+                data_base.delete_Operateur(f"ID_operateur={self.tableDatabase.item(current_row, 0).text()}")
+        except Exception as e:
+            QMessageBox.critical(self.window, "Erreur", f"Suppression impossible :\n{e}")
+            return
 
         self.tableDatabase.removeRow(current_row)
         QMessageBox.information(self.window, "Suppression", "La ligne a été supprimée du tableau.")
@@ -1058,7 +1029,7 @@ class MachineWindow:
             "operator_last_name": self.inputOperatorLastName.text().strip(),
             "operator_first_name": self.inputOperatorFirstName.text().strip(),
             "operator_email": self.inputOperatorEmail.text().strip(),
-            "notes": self.inputMachineNotes.toPlainText().strip() if self.inputMachineNotes else ""
+            "notes": self.inputMachineNotes.toPlainText().strip() if self.inputMachineNotes else "",
         }
 
     def validate_fields(self, data):
@@ -1108,26 +1079,22 @@ class MachineWindow:
                 data["operator_email"]
             )
 
+            nom = str(data["operator_last_name"]).replace("'", "''")
+            prenom = str(data["operator_first_name"]).replace("'", "''")
+            email = str(data["operator_email"]).replace("'", "''")
+
             result_operateur = data_base.select_Operateur(
-                f"Nom_operateur='{data['operator_last_name']}' "
-                f"AND Prenom_operateur='{data['operator_first_name']}' "
-                f"AND Email='{data['operator_email']}'"
+                f"Nom_operateur='{nom}' "
+                f"AND Prenom_operateur='{prenom}' "
+                f"AND Email='{email}'"
             )
 
             if not result_operateur:
                 raise Exception("Opérateur introuvable après insertion.")
 
-            ID_operateur = result_operateur[0][0]
+            id_operateur = result_operateur[0][0]
 
-            data_base.insert_Machine(data["name"], cycle_duration, electric_power, ID_operateur)
-
-            print("Machine enregistrée :")
-            print(f"Nom : {data['name']}")
-            print(f"Durée cycle : {cycle_duration}")
-            print(f"Puissance : {electric_power}")
-            print(f"Opérateur : {data['operator_first_name']} {data['operator_last_name']}")
-            print(f"Email : {data['operator_email']}")
-            print(f"Notes : {data['notes']}")
+            data_base.insert_Machine(data["name"], cycle_duration, electric_power, id_operateur)
 
             if self.on_machine_added is not None:
                 self.on_machine_added(data["name"])
@@ -1262,25 +1229,53 @@ class EditRowWindow:
     def _save_machine(self):
         id_machine = int(self.inputs["ID"].text())
         nom = self.inputs["Nom"].text().strip()
-        duree = int(self.inputs["Durée"].text())
-        puissance = float(self.inputs["Puissance"].text().replace(",", "."))
-        id_operateur = int(self.inputs["ID opérateur"].text())
 
         if nom == "":
             raise ValueError("Le nom de la machine ne peut pas être vide.")
+
+        try:
+            duree = int(self.inputs["Durée"].text().strip())
+        except ValueError:
+            raise ValueError("La durée doit être un entier.")
+
+        try:
+            puissance = float(self.inputs["Puissance"].text().replace(",", ".").strip())
+        except ValueError:
+            raise ValueError("La puissance doit être un nombre valide.")
+
+        try:
+            id_operateur = int(self.inputs["ID opérateur"].text().strip())
+        except ValueError:
+            raise ValueError("Le champ 'ID opérateur' doit contenir un identifiant numérique.")
 
         data_base.update_Machine(id_machine, nom, duree, puissance, id_operateur, f"ID_machine={id_machine}")
 
     def _save_etape(self):
         id_etape = int(self.inputs["ID"].text())
         nom_etape = self.inputs["Nom étape"].text().strip()
-        numero_execution = int(self.inputs["Numéro exécution"].text())
-        duree = int(self.inputs["Durée"].text())
-        id_produit = int(self.inputs["ID produit"].text())
-        id_machine = int(self.inputs["ID machine"].text())
 
         if nom_etape == "":
             raise ValueError("Le nom de l'étape ne peut pas être vide.")
+
+        try:
+            numero_execution = int(self.inputs["Numéro exécution"].text().strip())
+        except ValueError:
+            raise ValueError("Le numéro d'exécution doit être un entier.")
+
+        try:
+            duree = int(self.inputs["Durée"].text().strip())
+        except ValueError:
+            raise ValueError("La durée doit être un entier.")
+
+        try:
+            id_produit = int(self.inputs["ID produit"].text().strip())
+        except ValueError:
+            raise ValueError("Le champ 'ID produit' doit contenir un identifiant numérique.")
+
+        try:
+            id_machine = int(self.inputs["ID machine"].text().strip())
+        except ValueError:
+            raise ValueError("Le champ 'ID machine' doit contenir un identifiant numérique.")
 
         data_base.update_Etape(
             id_etape,
@@ -1289,7 +1284,7 @@ class EditRowWindow:
             duree,
             id_produit,
             id_machine,
-            f"ID_etape={id_etape}",
+            f"ID_etape={id_etape}"
         )
 
     def _save_operateur(self):
