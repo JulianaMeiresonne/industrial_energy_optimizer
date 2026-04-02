@@ -1,26 +1,8 @@
-from PySide6.QtWidgets import (
-    QFormLayout,
-    QAbstractItemView,
-    QComboBox,
-    QDoubleSpinBox,
-    QHeaderView,
-    QLabel,
-    QLineEdit,
-    QMessageBox,
-    QPushButton,
-    QSpinBox,
-    QTabWidget,
-    QTableWidget,
-    QTableWidgetItem,
-    QTextEdit,
-    QTimeEdit,
-)
+from PySide6.QtWidgets import (QFormLayout,QAbstractItemView,QComboBox,QDoubleSpinBox,QHeaderView,QLabel,QLineEdit,QMessageBox,QPushButton,QSpinBox,QTabWidget,QTableWidget,QTableWidgetItem,QTextEdit,QTimeEdit,)
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import QFile, QTime
 from PySide6.QtGui import QPixmap
 from datetime import datetime, timedelta
-import smtplib
-from email.message import EmailMessage
 import sys
 import Optimisation_prix_production as data_base
 
@@ -41,9 +23,7 @@ class MainWindow:
             print("Le chargement du fichier .ui a échoué")
             sys.exit(1)
 
-        # ==========================================================
         # TAB 1 : COMMANDES
-        # ==========================================================
         self.liste_produit_id_order = []
         self.labelCurrentDate = self.window.findChild(QLabel, "labelCurrentDate")
         self.InputProductOrder = self.window.findChild(QComboBox, "InputProductOrder")
@@ -57,9 +37,7 @@ class MainWindow:
         self.btnValidateOrder = self.window.findChild(QPushButton, "btnValidateOrder")
         self.labelPriceGraphImage = self.window.findChild(QLabel, "labelPriceGraphImage")
 
-        # ==========================================================
         # TAB 2 : PRODUITS
-        # ==========================================================
         self.step_liste = []
         self.inputProductName = self.window.findChild(QLineEdit, "inputProductName")
         self.inputDescription = self.window.findChild(QTextEdit, "inputDescription")
@@ -73,9 +51,7 @@ class MainWindow:
         self.btnCancel = self.window.findChild(QPushButton, "btnCancel")
         self.tableSteps = self.window.findChild(QTableWidget, "tableSteps")
 
-        # ==========================================================
         # TAB 3 : BASE DE DONNÉES
-        # ==========================================================
         self.inputDatabaseTable = self.window.findChild(QComboBox, "inputDatabaseTable")
         self.btnRefreshDatabase = self.window.findChild(QPushButton, "btnRefreshDatabase")
         self.btnAddDatabaseRow = self.window.findChild(QPushButton, "btnAddDatabaseRow")
@@ -83,9 +59,7 @@ class MainWindow:
         self.btnDeleteDatabaseRow = self.window.findChild(QPushButton, "btnDeleteDatabaseRow")
         self.tableDatabase = self.window.findChild(QTableWidget, "tableDatabase")
 
-        # ==========================================================
         # VÉRIFICATION DES WIDGETS
-        # ==========================================================
         required_widgets = {
             "labelCurrentDate": self.labelCurrentDate,
             "InputProductOrder": self.InputProductOrder,
@@ -121,15 +95,7 @@ class MainWindow:
                 print(f"Widget introuvable dans le .ui : {name}")
                 sys.exit(1)
 
-        # Création des tables si besoin
-        try:
-            data_base.createAllTables()
-        except Exception as e:
-            print(f"Attention : impossible d'initialiser les tables : {e}")
-
-        # ==========================================================
         # CONFIGURATION INITIALE
-        # ==========================================================
         self.setup_orders_table()
         self.setup_products_table()
         self.setup_database_table()
@@ -145,9 +111,7 @@ class MainWindow:
         self.load_machines_in_step_combo()
         self.refresh_database_table()
 
-        # ==========================================================
         # CONNEXIONS
-        # ==========================================================
         self.btnAddOrderLine.clicked.connect(self.add_order_line)
         self.btnRemoveOrderLine.clicked.connect(self.remove_order_line)
         self.btnValidateOrder.clicked.connect(self.validate_order)
@@ -164,9 +128,7 @@ class MainWindow:
         self.btnDeleteDatabaseRow.clicked.connect(self.delete_database_row)
         self.inputDatabaseTable.currentIndexChanged.connect(self.refresh_database_table)
 
-    # ==========================================================
     # HELPERS GÉNÉRAUX
-    # ==========================================================
 
     def escape_sql(self, value):
         return str(value).replace("'", "''")
@@ -175,9 +137,7 @@ class MainWindow:
         item = table.item(row, col)
         return item.text().strip() if item else default
 
-    # ==========================================================
     # HELPERS BDD
-    # ==========================================================
 
     def get_steps_for_product(self, product_id):
         rows = data_base.select_Etape(f"ID_produit={product_id}")
@@ -220,9 +180,7 @@ class MainWindow:
             return f"{operator[2]} {operator[1]}"
         return f"Opérateur #{operator_id}"
 
-    # ==========================================================
     # CALCULS : PRIX, HEURE DE FIN, ALERTES, E-MAILS
-    # ==========================================================
 
     def save_order_to_database(self):
         if self.tableOrders.rowCount() == 0:
@@ -266,13 +224,7 @@ class MainWindow:
                 datetime.strptime(start_text, "%H:%M").time()
             ).strftime("%Y-%m-%d %H:%M:%S")
 
-            data_base.insert_LienProduitCommande(
-                id_produit,
-                id_commande,
-                date_depart,
-                prix_produit,
-                quantity
-            )
+            data_base.insert_LienProduitCommande(id_produit,id_commande,date_depart,prix_produit,quantity)
 
         return id_commande
 
@@ -319,7 +271,7 @@ class MainWindow:
         if same_hour_match is not None:
             return same_hour_match
         if nearest_before is not None:
-            return nearest_before[1]
+            return nearest_before[1]# ex: si on a un prix à 14h00 et que la commande est à 14h30, on prend le prix de 14h00
 
         return 0.0
 
@@ -346,9 +298,7 @@ class MainWindow:
 
                 machine = self.get_machine_by_id(machine_id)
                 if not machine:
-                    timing_alerts.append(
-                        f"Machine introuvable pour l'étape '{step_name}' du produit '{product_name}'."
-                    )
+                    timing_alerts.append(f"Machine introuvable pour l'étape '{step_name}' du produit '{product_name}'.")
                     continue
 
                 _, machine_name, machine_duration, machine_power_kw, operator_id = machine
@@ -427,11 +377,7 @@ class MainWindow:
 
         return alerts
 
-    def send_order_emails(self, email_lines):
-        """
-        Écrit les e-mails des opérateurs dans un fichier texte
-        au lieu de les envoyer par SMTP.
-        """
+    def send_order_emails(self, email_lines):# Écrit les e-mails des opérateurs dans un fichier texte
         if not email_lines:
             QMessageBox.warning(
                 self.window,
@@ -503,9 +449,7 @@ class MainWindow:
                 f"Erreur lors de l'écriture du fichier mail :\n{e}"
             )
 
-    # ==========================================================
     # TAB 1 : COMMANDES
-    # ==========================================================
 
     def display_current_date(self):
         self.labelCurrentDate.setText(datetime.now().strftime("%d/%m/%Y"))
@@ -557,12 +501,54 @@ class MainWindow:
             print(f"Erreur chargement machines : {e}")
 
     def optimize_start_hour(self):
-        self.inputStartHour.setTime(QTime(8, 0))
-        QMessageBox.information(
-            self.window,
-            "Optimisation",
-            "Heure de début optimisée à 08:00."
-        )
+        try:
+            rows = data_base.select_Prix("TRUE")
+
+            if not rows:
+                QMessageBox.warning(self.window, "Erreur", "Aucun prix disponible.")
+                return
+
+            aujourd_hui = datetime.now().date()
+
+            best_price = None
+            best_time = None
+
+            for row in rows:
+                try:
+                    db_dt = datetime.fromisoformat(str(row[0]).replace(" ", "T"))
+                    db_price = float(str(row[1]).replace(",", "."))
+
+                    if db_dt.date() != aujourd_hui:
+                        continue
+
+                    if best_price is None or db_price < best_price:
+                        best_price = db_price
+                        best_time = db_dt
+
+                except Exception as e:
+                    print(f"Erreur lecture prix : {row} -> {e}")
+                    continue
+
+            if best_time is None:
+                QMessageBox.warning(self.window,"Aucun prix trouvé","Aucun prix disponible pour aujourd'hui.")
+                return
+
+            # appliquer l'heure trouvée
+            self.inputStartHour.setTime(QTime(best_time.hour, best_time.minute))
+
+            QMessageBox.information(
+                self.window,
+                "Optimisation",
+                f"Heure optimisée : {best_time.strftime('%H:%M')}\n"
+                f"Prix : {best_price:.4f} €/kWh"
+            )
+
+        except Exception as e:
+            QMessageBox.critical(
+                self.window,
+                "Erreur",
+                f"Erreur lors de l'optimisation :\n{e}"
+            )
 
     def add_order_line(self):
         product_name = self.InputProductOrder.currentText().strip()
@@ -699,9 +685,7 @@ class MainWindow:
 
         QMessageBox.information(self.window, "Commande validée", message)
 
-    # ==========================================================
     # TAB 2 : PRODUITS
-    # ==========================================================
 
     def setup_products_table(self):
         self.tableSteps.setColumnCount(5)
@@ -817,9 +801,7 @@ class MainWindow:
         self.machine_window = MachineWindow(on_machine_added=self.add_machine_to_combo)
         self.machine_window.window.show()
 
-    # ==========================================================
     # TAB 3 : BASE DE DONNÉES
-    # ==========================================================
 
     def setup_database_table(self):
         self.tableDatabase.setSelectionBehavior(QAbstractItemView.SelectRows)

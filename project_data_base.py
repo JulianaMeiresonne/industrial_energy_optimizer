@@ -37,6 +37,8 @@ if __name__ == "__main__":
         data_prix = price_kwh.info_price()
         data_prix.plot()
         plt.title('Belgian price consumption')
+        plt.xlabel('Date')
+        plt.ylabel('Price (EUR/kWh)')
         plt.savefig(filename, dpi=300, bbox_inches='tight')# Enregistrer le graphique avec une résolution de 300 dpi et des marges ajustées
         plt.close()# Fermer la figure pour libérer de la mémoire
         for i in range(len(data_prix.keys())):
@@ -54,14 +56,13 @@ if __name__ == "__main__":
     #machines = data_base.select_Machine("Nom_machine='Four'")
     #machines = data_base.select_Machine("ID_machine=1959042371")
     machines = data_base.select_Machine("TRUE") # Récupérer toutes les machines de la base de données
-    print(machines)
     for a in machines:
         if a[1] != None:
             window.add_machine_to_combo(a[1])  # Assuming the machine name is the first column
         else:
             print("Aucune machine trouvée dans la base de données.")
-    window.window.show() # Affichage de la fenêtre principale de l'application
-    app.exec() # Lancement de la boucle d'événements de l'application (affiche la fenêtre et attend les interactions de l'utilisateur)
+    window.window.show()
+    app.exec() 
 
 
 
