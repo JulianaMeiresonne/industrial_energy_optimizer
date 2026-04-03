@@ -1,0 +1,68 @@
+À        : bmsi30@yahoo.com
+Sujet    : Planning validé de production
+----------------------------------------------------------------------------------------------------
+Bonjour Lucas Martin,
+
+Voici votre planning de production.
+Heure de génération : 16:54 le 02/04/2026.
+
+Produit      : Croissant
+Machine      : Pétrin
+Tâche        : Pétrissage pâte croissant
+Heure début  : 17:54
+Heure fin    : 19:04
+
+Produit      : Croissant
+Machine      : Chambre de pousse
+Tâche        : Pousse pâte croissant
+Heure début  : 19:04
+Heure fin    : 20:04
+
+Produit      : Croissant
+Machine      : Four industriel
+Tâche        : Cuisson croissant
+Heure début  : 20:04
+Heure fin    : 20:34
+
+Produit      : Croissant
+Machine      : Pétrin
+Tâche        : Pétrissage pâte croissant
+Heure début  : 20:34
+Heure fin    : 21:44
+
+Produit      : Croissant
+Machine      : Chambre de pousse
+Tâche        : Pousse pâte croissant
+Heure début  : 21:44
+Heure fin    : 22:44
+
+Produit      : Croissant
+Machine      : Four industriel
+Tâche        : Cuisson croissant
+Heure début  : 22:44
+Heure fin    : 23:14
+
+Produit      : Croissant
+Machine      : Pétrin
+Tâche        : Pétrissage pâte croissant
+Heure début  : 23:14
+Heure fin    : 00:24
+
+Produit      : Croissant
+Machine      : Chambre de pousse
+Tâche        : Pousse pâte croissant
+Heure début  : 00:24
+Heure fin    : 01:24
+
+Produit      : Croissant
+Machine      : Four industriel
+Tâche        : Cuisson croissant
+Heure début  : 01:24
+Heure fin    : 01:54
+
+Merci de préparer votre poste et de suivre ce planning.
+
+Cordialement,
+Application de gestion de production
+----------------------------------------------------------------------------------------------------
+

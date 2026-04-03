@@ -649,7 +649,7 @@ class MainWindow:
             self.tableOrders.setItem(row, 2, QTableWidgetItem(f"{product_cost:.2f} €"))
             self.tableOrders.setItem(row, 4, QTableWidgetItem(end_dt.strftime("%H:%M")))
 
-        seuil_prix = 0.0
+        seuil_prix = -1.0
         global_price_alerts = self.check_price_alerts(seuil_prix)
 
         if global_price_alerts:

@@ -1,0 +1,74 @@
+À        : bmsi30@yahoo.com
+Sujet    : Planning validé de production
+----------------------------------------------------------------------------------------------------
+Bonjour Lucas Martin,
+
+Voici votre planning de production.
+Heure de génération : 16:52 le 02/04/2026.
+
+Produit      : Pain blanc
+Machine      : Pétrin
+Tâche        : Pétrissage pâte pain blanc
+Heure début  : 18:50
+Heure fin    : 19:20
+
+Produit      : Pain blanc
+Machine      : Façonneuse
+Tâche        : Façonnage pain blanc
+Heure début  : 19:20
+Heure fin    : 19:35
+
+Produit      : Pain blanc
+Machine      : Chambre de pousse
+Tâche        : Pousse pain blanc
+Heure début  : 19:35
+Heure fin    : 20:35
+
+Produit      : Pain blanc
+Machine      : Four industriel
+Tâche        : Cuisson pain blanc
+Heure début  : 20:35
+Heure fin    : 20:45
+
+Produit      : Croissant
+Machine      : Pétrin
+Tâche        : Pétrissage pâte croissant
+Heure début  : 18:50
+Heure fin    : 20:00
+
+Produit      : Croissant
+Machine      : Chambre de pousse
+Tâche        : Pousse pâte croissant
+Heure début  : 20:00
+Heure fin    : 21:00
+
+Produit      : Croissant
+Machine      : Four industriel
+Tâche        : Cuisson croissant
+Heure début  : 21:00
+Heure fin    : 21:30
+
+Produit      : Croissant
+Machine      : Pétrin
+Tâche        : Pétrissage pâte croissant
+Heure début  : 21:30
+Heure fin    : 22:40
+
+Produit      : Croissant
+Machine      : Chambre de pousse
+Tâche        : Pousse pâte croissant
+Heure début  : 22:40
+Heure fin    : 23:40
+
+Produit      : Croissant
+Machine      : Four industriel
+Tâche        : Cuisson croissant
+Heure début  : 23:40
+Heure fin    : 00:10
+
+Merci de préparer votre poste et de suivre ce planning.
+
+Cordialement,
+Application de gestion de production
+----------------------------------------------------------------------------------------------------
+

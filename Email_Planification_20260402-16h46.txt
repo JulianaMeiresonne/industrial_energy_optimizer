@@ -1,0 +1,86 @@
+À        : bmsi30@yahoo.com
+Sujet    : Planning validé de production
+----------------------------------------------------------------------------------------------------
+Bonjour Lucas Martin,
+
+Voici votre planning de production.
+Heure de génération : 16:46 le 02/04/2026.
+
+Produit      : Pain blanc
+Machine      : Pétrin
+Tâche        : Pétrissage pâte pain blanc
+Heure début  : 13:45
+Heure fin    : 14:15
+
+Produit      : Pain blanc
+Machine      : Façonneuse
+Tâche        : Façonnage pain blanc
+Heure début  : 14:15
+Heure fin    : 14:30
+
+Produit      : Pain blanc
+Machine      : Chambre de pousse
+Tâche        : Pousse pain blanc
+Heure début  : 14:30
+Heure fin    : 15:30
+
+Produit      : Pain blanc
+Machine      : Four industriel
+Tâche        : Cuisson pain blanc
+Heure début  : 15:30
+Heure fin    : 15:40
+
+Produit      : Pain blanc
+Machine      : Pétrin
+Tâche        : Pétrissage pâte pain blanc
+Heure début  : 15:40
+Heure fin    : 16:10
+
+Produit      : Pain blanc
+Machine      : Façonneuse
+Tâche        : Façonnage pain blanc
+Heure début  : 16:10
+Heure fin    : 16:25
+
+Produit      : Pain blanc
+Machine      : Chambre de pousse
+Tâche        : Pousse pain blanc
+Heure début  : 16:25
+Heure fin    : 17:25
+
+Produit      : Pain blanc
+Machine      : Four industriel
+Tâche        : Cuisson pain blanc
+Heure début  : 17:25
+Heure fin    : 17:35
+
+Produit      : Pain blanc
+Machine      : Pétrin
+Tâche        : Pétrissage pâte pain blanc
+Heure début  : 17:35
+Heure fin    : 18:05
+
+Produit      : Pain blanc
+Machine      : Façonneuse
+Tâche        : Façonnage pain blanc
+Heure début  : 18:05
+Heure fin    : 18:20
+
+Produit      : Pain blanc
+Machine      : Chambre de pousse
+Tâche        : Pousse pain blanc
+Heure début  : 18:20
+Heure fin    : 19:20
+
+Produit      : Pain blanc
+Machine      : Four industriel
+Tâche        : Cuisson pain blanc
+Heure début  : 19:20
+Heure fin    : 19:30
+
+Merci de préparer votre poste et de suivre ce planning.
+
+Cordialement,
+Application de gestion de production
+----------------------------------------------------------------------------------------------------
+
